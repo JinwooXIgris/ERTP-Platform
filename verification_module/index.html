@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gate Verification</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <h1>Gate Ticket Verification</h1>
+    <div>UI Tech Conference 2026</div>
+</header>
+
+<main>
+    <!-- Officer login -->
+    <section class="card" id="loginCard">
+        <h2>Gate officer login</h2>
+        <p>Username</p><input type="text" id="username">
+        <p>Password</p><input type="password" id="password">
+        <button onclick="login()">Login</button>
+        <div id="loginMsg"></div>
+    </section>
+
+    <div class="hidden" id="gate">
+        <!-- Verify a ticket -->
+        <section class="card">
+            <button class="light" onclick="logout()">Logout <span id="officerName"></span></button>
+            <h2>Verify a ticket</h2>
+            <p>Type or paste the ticket number</p>
+            <input type="text" id="ticketNumber" placeholder="e.g. TEST-VALID-1" autocomplete="off">
+            <button onclick="verifyTicket(false)">Verify</button>
+            <button class="go hidden" id="checkInBtn" onclick="verifyTicket(true)">Check in guest</button>
+            <div id="result"></div>
+            <div class="details" id="details"></div>
+        </section>
+
+        <!-- Summary -->
+        <section class="card">
+            <h2>Gate summary</h2>
+            <div class="stats" id="stats"></div>
+        </section>
+
+        <!-- Recent checks -->
+        <section class="card">
+            <h2>Recent checks</h2>
+            <div class="table-wrap"><table id="recentTable"></table></div>
+        </section>
+    </div>
+</main>
+
+<script src="js/verify.js"></script>
+</body>
+</html>
