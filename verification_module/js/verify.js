@@ -17,20 +17,20 @@ async function checkSession() {
     var response = await fetch("api/officer-login.php?action=me");
     var data = await response.json();
     if (data.success) {
-        showGate(data.username);
+        showGate(data.name);
     }
 }
 
 async function login() {
     var data = await postJSON("api/officer-login.php", {
-        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
         password: document.getElementById("password").value
     });
     var box = document.getElementById("loginMsg");
     if (data.success) {
         box.className = "";
         box.textContent = "";
-        showGate(data.username);
+        showGate(data.name);
     } else {
         box.className = "msg bad";
         box.textContent = data.message;
@@ -51,30 +51,19 @@ function showGate(name) {
 }
 
 // ---------- verify a ticket ----------
-async function verifyTicket(checkIn) {
-    var number = document.getElementById("ticketNumber").value;
-    var data = await postJSON("api/verify-ticket.php", {
-        ticket_number: number,
-        check_in: checkIn
-    });
+async function verifyTicket() {
+    var code = document.getElementById("ticketCode").value;
+    var data = await postJSON("api/verify-ticket.php", { code: code });
 
     if (data.status == "login_needed") {
         logout();
         return;
     }
 
-    // coloured result box: green, orange or red
+    // coloured result box: green (valid), orange (used) or red (invalid)
     var box = document.getElementById("result");
     box.className = "result " + data.status;
     box.textContent = data.message;
-
-    // show the check-in button only for a valid ticket
-    var button = document.getElementById("checkInBtn");
-    if (data.status == "valid") {
-        button.classList.remove("hidden");
-    } else {
-        button.classList.add("hidden");
-    }
 
     showDetails(data.ticket);
     loadSummary();
@@ -89,7 +78,7 @@ function showDetails(ticket) {
     var lines = [
         "Ticket: " + ticket.ticket_number,
         "Holder: " + ticket.holder_name,
-        "Category: " + (ticket.category_name || "-"),
+        "Category: " + ticket.category_name,
         "Status: " + ticket.status
     ];
     if (ticket.used_at) {
@@ -102,7 +91,7 @@ function showDetails(ticket) {
     }
 }
 
-// ---------- summary and recent checks ----------
+// ---------- summary and recent scans ----------
 async function loadSummary() {
     var response = await fetch("api/verification-log.php");
     var data = await response.json();
@@ -118,21 +107,21 @@ async function loadSummary() {
         "<div class='stat'><b>" + s.invalid + "</b>Invalid tickets refused</div>";
 
     var table = document.getElementById("recentTable");
-    table.innerHTML = "<tr><th>Time</th><th>Ticket</th><th>Result</th><th>Officer</th></tr>";
+    table.innerHTML = "<tr><th>Time</th><th>Scanned</th><th>Result</th><th>Officer</th></tr>";
     for (var i = 0; i < data.recent.length; i++) {
         var r = data.recent[i];
         var row = table.insertRow();
         row.insertCell().textContent = r.created_at;
-        row.insertCell().textContent = r.ticket_number;
+        row.insertCell().textContent = r.input_code;
         row.insertCell().textContent = r.result;
-        row.insertCell().textContent = r.username || "-";
+        row.insertCell().textContent = r.officer || "-";
     }
 }
 
 // press Enter to verify
-document.getElementById("ticketNumber").addEventListener("keydown", function (event) {
+document.getElementById("ticketCode").addEventListener("keydown", function (event) {
     if (event.key == "Enter") {
-        verifyTicket(false);
+        verifyTicket();
     }
 });
 

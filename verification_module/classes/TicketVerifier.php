@@ -1,6 +1,8 @@
 <?php
-// Checks tickets and marks them as used.
-// Results (status): valid, used, invalid, checked_in
+// Checks a ticket at the gate.
+// The ticket can be typed as the ticket number (e.g. UIT26-7K4Q9)
+// or as the long verification code (what the QR code holds).
+// Results: valid, used, invalid
 class TicketVerifier {
     private $conn;
 
@@ -8,48 +10,62 @@ class TicketVerifier {
         $this->conn = $conn;
     }
 
-    // Capital letters and no spaces, so "ticket-1 " and "TICKET-1" are the same
-    public function cleanNumber($input) {
-        return strtoupper(trim($input));
+    public function cleanInput($input) {
+        return trim($input);
     }
 
-    // Only letters, numbers and dashes, 3 to 30 characters
-    public function hasValidFormat($number) {
-        return preg_match('/^[A-Z0-9-]{3,30}$/', $number) == 1;
+    // Only letters, numbers and dashes, 3 to 100 characters
+    public function hasValidFormat($input) {
+        return preg_match('/^[A-Za-z0-9-]{3,100}$/', $input) == 1;
     }
 
-    public function findTicket($number) {
+    // Finds a ticket and the holder's name and category (the verification code is never sent out)
+    public function findTicket($input) {
         $stmt = $this->conn->prepare(
-            "SELECT t.*, c.name AS category_name
+            "SELECT t.id, t.ticket_number, t.status, t.used_at,
+                    c.name AS category_name, u.full_name AS holder_name
              FROM tickets t
-             LEFT JOIN orders o ON t.order_id = o.id
-             LEFT JOIN ticket_categories c ON o.category_id = c.id
-             WHERE t.ticket_number = ?"
+             JOIN ticket_categories c ON t.category_id = c.id
+             JOIN orders o ON t.order_id = o.id
+             JOIN users u ON o.user_id = u.id
+             WHERE t.verification_code = ? OR t.ticket_number = ?
+             LIMIT 1"
         );
-        $stmt->execute([$number]);
+        $stmt->execute([$input, $input]);
         return $stmt->fetch();
     }
 
-    // Looks at a ticket but does NOT change it
-    public function verify($number) {
-        if (!$this->hasValidFormat($number)) {
+    // Checks the ticket AND marks it as used in one step
+    public function verify($input, $officerId) {
+        $input = $this->cleanInput($input);
+
+        if (!$this->hasValidFormat($input)) {
             return [
                 "success" => false,
                 "status" => "invalid",
-                "message" => "Invalid ticket number. Use only letters, numbers and dashes."
+                "message" => "Invalid ticket. Use only letters, numbers and dashes."
             ];
         }
 
-        $ticket = $this->findTicket($number);
+        // ONE update that checks "status = issued" and changes it to "used".
+        // If two officers scan the same ticket together, only one of them gets a row changed.
+        $stmt = $this->conn->prepare(
+            "UPDATE tickets
+             SET status = 'used', used_at = NOW(), verified_by = ?
+             WHERE (verification_code = ? OR ticket_number = ?) AND status = 'issued'"
+        );
+        $stmt->execute([$officerId, $input, $input]);
+        $ticket = $this->findTicket($input);
 
-        if (!$ticket) {
+        if ($stmt->rowCount() == 1) {
             return [
-                "success" => false,
-                "status" => "invalid",
-                "message" => "Invalid ticket. This ticket number does not exist."
+                "success" => true,
+                "status" => "valid",
+                "message" => "Valid ticket. Guest admitted.",
+                "ticket" => $ticket
             ];
         }
-        if ($ticket["status"] == "used") {
+        if ($ticket) {
             return [
                 "success" => false,
                 "status" => "used",
@@ -58,39 +74,9 @@ class TicketVerifier {
             ];
         }
         return [
-            "success" => true,
-            "status" => "valid",
-            "message" => "Valid ticket. Allow entry.",
-            "ticket" => $ticket
+            "success" => false,
+            "status" => "invalid",
+            "message" => "Invalid ticket. This ticket does not exist."
         ];
-    }
-
-    // Verifies the ticket and then marks it as used
-    public function checkIn($number) {
-        $result = $this->verify($number);
-        if ($result["status"] != "valid") {
-            return $result;   // invalid or already used, nothing to check in
-        }
-
-        // "AND status = 'valid'" means only ONE officer can check a ticket in,
-        // even if two officers press the button at the same time
-        $stmt = $this->conn->prepare(
-            "UPDATE tickets SET status = 'used', used_at = NOW()
-             WHERE ticket_number = ? AND status = 'valid'"
-        );
-        $stmt->execute([$number]);
-
-        if ($stmt->rowCount() == 0) {
-            $result["success"] = false;
-            $result["status"] = "used";
-            $result["message"] = "Ticket already used. Do not allow entry.";
-            $result["ticket"] = $this->findTicket($number);
-            return $result;
-        }
-
-        $result["status"] = "checked_in";
-        $result["message"] = "Ticket checked in. Guest admitted.";
-        $result["ticket"] = $this->findTicket($number);
-        return $result;
     }
 }

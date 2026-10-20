@@ -1,40 +1,41 @@
-VERIFICATION MODULE (ticket verification at the gate)
+VERIFICATION MODULE (gate ticket verification) - works with the group database "uiconf"
 
-This module only does verification. It reads the "tickets" table that your partner's
-ticketing/payment part creates. It needs these existing tables: tickets, orders, ticket_categories.
+It reads the group's tables: tickets, orders, users, ticket_categories.
+It writes to: tickets (marks a ticket used) and verification_log.
+There are NO extra tables to create.
 
 SETUP (XAMPP)
-1. Make sure the ticketing database exists (ticketing_db from the ticketing module).
-2. phpMyAdmin > Import > choose verification_setup.sql > Go.
-   (creates gate_officers and verification_log)
-3. OPTIONAL, for testing before payment is ready: import sample_tickets.sql.
-   It adds TEST-VALID-1, TEST-VALID-2 and TEST-USED-1.
-4. Copy the folder verification_module into C:\xampp\htdocs\
-5. Open http://localhost/verification_module/
-6. Login: gate1 / password
+1. In phpMyAdmin, import schema.sql and then seed.sql (the group's files, in the repository).
+2. OPTIONAL, to test before the payment part is ready: import verification_test_data.sql ONCE.
+   It adds the tickets UIT26-TEST1, UIT26-TEST2 and UIT26-USED1.
+3. Put the folder verification_module in C:\xampppsss\htdocs\ERTP-Platform\
+4. Open http://localhost/ERTP-Platform/verification_module/
+5. Login: verifier@uiconf.test / password
+   (or any user in the users table whose role is verifier or admin)
 
-USING A DIFFERENT DATABASE
-If your group uses event_ticket_db (main project), change "ticketing_db" to
-"event_ticket_db" in classes/Database.php and on the USE line of verification_setup.sql.
+HOW IT WORKS
+- One scan checks the ticket AND marks it as used, in one atomic UPDATE (as the schema describes).
+- You can type the ticket number (UIT26-7K4Q9) or the long verification code.
+- Results: valid (admitted), used (already scanned), invalid (not found).
+- Every scan is saved in verification_log.
 
 DEMO SCRIPT (success and failure)
-1. Try to open the page's API without logging in -> "Gate officer login required".
-2. Login with a wrong password -> error. Login with gate1 / password -> works.
-3. Verify TEST-VALID-1 -> green "Valid ticket".
-4. Click Check in guest -> "Ticket checked in".
-5. Verify TEST-VALID-1 again -> orange "Ticket already used".
-6. Verify TEST-USED-1 -> orange "already used".
-7. Verify FAKE-123 -> red "Invalid ticket".
-8. Look at the Recent checks table and at the verification_log table in phpMyAdmin.
+1. Login with a wrong password -> error. Login with verifier@uiconf.test / password -> works.
+2. Verify UIT26-TEST1 -> green "Valid ticket. Guest admitted."
+3. Verify UIT26-TEST1 again -> orange "Ticket already used."
+4. Verify UIT26-USED1 -> orange "already used".
+5. Verify FAKE-123 -> red "Invalid ticket."
+6. Look at Recent scans, and at the tickets and verification_log tables in phpMyAdmin.
 
 TEST CASES (for the write-up)
-Valid ticket              TEST-VALID-1                 valid, entry allowed
-Check in                  TEST-VALID-1 + Check in      checked_in, status becomes used
-Reuse                     TEST-VALID-1 again           used, entry refused
-Already used ticket       TEST-USED-1                  used, entry refused
-Fake ticket               FAKE-123                     invalid
-Bad characters            AB#$%                        invalid format
-Empty input               (nothing)                    "Enter or paste a ticket number"
-Lowercase input           test-valid-2                 valid (turned into capitals)
-No login                  call API without login       401, login needed
-Wrong password            gate1 / wrong                error message
+Valid ticket           UIT26-TEST1            valid, status becomes used
+Reuse                  UIT26-TEST1 again      used, entry refused
+Already used           UIT26-USED1            used, entry refused
+Fake ticket            FAKE-123               invalid
+Bad characters         AB#$%                  invalid
+Empty input            (nothing)              "Enter or paste a ticket number"
+Lowercase input        uit26-test2            valid
+Long code              (the verification_code of an issued ticket)   valid
+No login               call the API without login   401, login needed
+Wrong password         verifier@uiconf.test / wrong    error message
+Attendee account       attendee@uiconf.test / password   refused (not a gate officer)

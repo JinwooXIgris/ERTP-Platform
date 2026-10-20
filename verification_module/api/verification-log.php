@@ -1,5 +1,5 @@
 <?php
-// Gate summary numbers and the 10 most recent checks
+// Gate summary numbers and the 10 most recent scans
 require_once "init.php";
 requireOfficer();
 

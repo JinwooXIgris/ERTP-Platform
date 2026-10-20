@@ -1,5 +1,5 @@
 <?php
-// Gate officers are the only people allowed to verify tickets
+// Gate officers are users whose role is 'verifier' (or 'admin')
 class GateOfficer {
     private $conn;
 
@@ -7,18 +7,20 @@ class GateOfficer {
         $this->conn = $conn;
     }
 
-    public function login($username, $password) {
-        $stmt = $this->conn->prepare("SELECT * FROM gate_officers WHERE username = ?");
-        $stmt->execute([$username]);
+    public function login($email, $password) {
+        $stmt = $this->conn->prepare(
+            "SELECT * FROM users WHERE email = ? AND role IN ('verifier', 'admin')"
+        );
+        $stmt->execute([strtolower($email)]);
         $officer = $stmt->fetch();
 
-        if ($officer && password_verify($password, $officer["password"])) {
+        if ($officer && password_verify($password, $officer["password_hash"])) {
             return [
                 "success" => true,
                 "officer_id" => $officer["id"],
-                "username" => $officer["username"]
+                "name" => $officer["full_name"]
             ];
         }
-        return ["success" => false, "message" => "Wrong username or password."];
+        return ["success" => false, "message" => "Wrong email or password, or this account is not a gate officer."];
     }
 }

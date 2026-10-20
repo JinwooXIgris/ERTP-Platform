@@ -1,5 +1,5 @@
 <?php
-// POST            -> login
+// POST               -> login (email + password)
 // GET ?action=me     -> is an officer already logged in?
 // GET ?action=logout -> log out
 require_once "init.php";
@@ -14,7 +14,7 @@ if ($action == "logout") {
 
 if ($action == "me") {
     if (isset($_SESSION["officer_id"])) {
-        respond(["success" => true, "username" => $_SESSION["officer_name"]]);
+        respond(["success" => true, "name" => $_SESSION["officer_name"]]);
     }
     respond(["success" => false]);
 }
@@ -22,10 +22,10 @@ if ($action == "me") {
 requirePost();
 $input = getInput();
 $officer = new GateOfficer($conn);
-$result = $officer->login(trim($input["username"] ?? ""), $input["password"] ?? "");
+$result = $officer->login(trim($input["email"] ?? ""), $input["password"] ?? "");
 
 if ($result["success"]) {
     $_SESSION["officer_id"] = $result["officer_id"];
-    $_SESSION["officer_name"] = $result["username"];
+    $_SESSION["officer_name"] = $result["name"];
 }
 respond($result);

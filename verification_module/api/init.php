@@ -1,5 +1,6 @@
 <?php
 // Included at the top of every API file
+date_default_timezone_set("Africa/Lagos");
 session_start();
 header("Content-Type: application/json");
 

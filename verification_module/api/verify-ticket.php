@@ -1,26 +1,23 @@
 <?php
-// POST { "ticket_number": "...", "check_in": false }  -> only check the ticket
-// POST { "ticket_number": "...", "check_in": true }   -> check it AND mark it as used
+// POST { "code": "UIT26-7K4Q9" }  (a ticket number or the long verification code)
+// Checks the ticket and marks it as used, in one step.
 require_once "init.php";
 requirePost();
 requireOfficer();
 
 $input = getInput();
 $verifier = new TicketVerifier($conn);
-$number = $verifier->cleanNumber($input["ticket_number"] ?? "");
+$code = $verifier->cleanInput($input["code"] ?? ($input["ticket_number"] ?? ""));
 
-if ($number == "") {
+if ($code == "") {
     respond(["success" => false, "status" => "invalid", "message" => "Enter or paste a ticket number."], 400);
 }
 
-if (!empty($input["check_in"])) {
-    $result = $verifier->checkIn($number);
-} else {
-    $result = $verifier->verify($number);
-}
+$result = $verifier->verify($code, $_SESSION["officer_id"]);
 
-// Save every check in the log
+// Save every scan in verification_log
+$ticketId = isset($result["ticket"]) ? $result["ticket"]["id"] : null;
 $log = new VerificationLog($conn);
-$log->record($number, $result["status"], $_SESSION["officer_id"]);
+$log->record($ticketId, $code, $result["status"], $_SESSION["officer_id"]);
 
 respond($result);

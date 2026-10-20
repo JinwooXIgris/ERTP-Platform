@@ -16,7 +16,7 @@
     <!-- Officer login -->
     <section class="card" id="loginCard">
         <h2>Gate officer login</h2>
-        <p>Username</p><input type="text" id="username">
+        <p>Email</p><input type="text" id="email">
         <p>Password</p><input type="password" id="password">
         <button onclick="login()">Login</button>
         <div id="loginMsg"></div>
@@ -27,10 +27,9 @@
         <section class="card">
             <button class="light" onclick="logout()">Logout <span id="officerName"></span></button>
             <h2>Verify a ticket</h2>
-            <p>Type or paste the ticket number</p>
-            <input type="text" id="ticketNumber" placeholder="e.g. TEST-VALID-1" autocomplete="off">
-            <button onclick="verifyTicket(false)">Verify</button>
-            <button class="go hidden" id="checkInBtn" onclick="verifyTicket(true)">Check in guest</button>
+            <p>Type or paste the ticket number (or the long code)</p>
+            <input type="text" id="ticketCode" placeholder="e.g. UIT26-7K4Q9" autocomplete="off">
+            <button onclick="verifyTicket()">Verify</button>
             <div id="result"></div>
             <div class="details" id="details"></div>
         </section>
@@ -41,9 +40,9 @@
             <div class="stats" id="stats"></div>
         </section>
 
-        <!-- Recent checks -->
+        <!-- Recent scans -->
         <section class="card">
-            <h2>Recent checks</h2>
+            <h2>Recent scans</h2>
             <div class="table-wrap"><table id="recentTable"></table></div>
         </section>
     </div>

@@ -8,11 +8,10 @@ main { max-width: 600px; margin: 16px auto; padding: 0 12px; }
 input { width: 100%; padding: 12px; margin: 6px 0 12px 0; border: 1px solid #aaa; border-radius: 5px; font-size: 16px; }
 button { background: #1b4332; color: white; border: none; padding: 11px 16px; border-radius: 5px; font-size: 15px; cursor: pointer; margin-right: 6px; }
 button.light { background: #ddd; color: #222; }
-button.go { background: #2d6a4f; }
 .msg { padding: 10px; border-radius: 5px; margin-top: 8px; }
 .bad { background: #fbdcdc; color: #8a1111; }
 .result { padding: 16px; border-radius: 6px; margin-top: 12px; font-size: 18px; font-weight: bold; text-align: center; }
-.result.valid, .result.checked_in { background: #d9f2e0; color: #0b5a22; }
+.result.valid { background: #d9f2e0; color: #0b5a22; }
 .result.used { background: #ffe8c2; color: #8a4b00; }
 .result.invalid { background: #fbdcdc; color: #8a1111; }
 .details { margin-top: 10px; line-height: 1.6; }
