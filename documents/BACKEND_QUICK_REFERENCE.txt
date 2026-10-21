@@ -1,0 +1,227 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    BACKEND & DATABASE: QUICK REFERENCE                      ║
+║              Event Registration & Ticket Payment Platform v1.0              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ FILE & ENDPOINT OWNERSHIP                                                    │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+BE-A (Backend Infrastructure & Auth)
+├── OWNS FILES:
+│   ├── includes/db.php                  [Day 2 freeze]
+│   ├── includes/auth.php                [Day 2 freeze]
+│   └── (config.example.php, schema.sql, seed.sql are reference)
+│
+└── OWNS ENDPOINTS:
+    ├── POST   /api/register.php         [Days 3-4]
+    ├── POST   /api/login.php            [Days 3-4]
+    ├── POST   /api/logout.php           [Days 3-4]
+    └── GET    /api/me.php               [Days 3-4]
+
+
+BE-B (Response Helpers & Admin)
+├── OWNS FILES:
+│   ├── includes/response.php            [Day 2 freeze]
+│   └── includes/validate.php            [Day 2 freeze]
+│
+└── OWNS ENDPOINTS:
+    ├── GET    /api/event.php            [Days 3-4]
+    ├── GET    /api/categories.php       [Days 3-4]
+    ├── GET    /api/admin/stats.php      [Days 5-6]
+    ├── GET    /api/admin/attendees.php  [Days 5-6]
+    ├── POST   /api/admin/update-price.php    [Days 5-6]
+    └── POST   /api/admin/update-event.php    [Days 5-6]
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DEPENDENCY ORDER (Critical Path)                                             │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  1. database/schema.sql + seed.sql  ← Already created ✓
+        ↓
+  2. includes/db.php  ← BE-A creates [Day 2]
+        ↓
+  3. includes/auth.php  ← BE-A creates [Day 2]
+        ↓
+  4. includes/response.php & validate.php  ← BE-B creates [Day 2]
+        ↓
+  5. All endpoints depend on #2, #3, #4  ← BE-A & BE-B build [Days 3-6]
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ WHO WAITS FOR WHOM                                                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+BE-A waits on: NO ONE (you're foundational)
+BE-B waits on: BE-A's db.php and auth.php (pull from develop on Day 2)
+FE-A waits on: BE-A's register/login + BE-B's event endpoint
+FE-B waits on: BE-B's admin endpoints
+TP-A waits on: BE-B's response.php (for payment endpoint)
+TP-B waits on: BE-B's response.php + BE-A's auth.php (for verify endpoint)
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ TIMELINE AT A GLANCE                                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+Day 1    Kickoff & database setup (both)
+Day 2    [FREEZE] Push helper files with signatures (BE-A & BE-B)
+Days 3-4 BE-A: register, login, logout, me endpoints
+Days 3-4 BE-B: event, categories endpoints (parallel)
+Days 5-6 BE-B: admin endpoints (stats, attendees, update-price, update-event)
+Day 7    Both endpoints live; FE can integrate
+Days 8-9 Support TP-A & TP-B; answer schema questions
+Days 10-11 QA tests all endpoints; fix bugs
+Days 12-14 Polish, documentation, demo prep
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ EACH PERSON MUST HAVE (Checklist)                                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+□ Local MySQL running (XAMPP/WAMP/Laragon)
+□ uiconf database created (schema.sql imported)
+□ Test data seeded (seed.sql imported)
+□ config.php created from config.example.php (filled in locally)
+□ Git cloned locally with folder structure: /api, /includes, /public, /database
+□ Able to run: mysql -u root -p -e "SELECT COUNT(*) FROM users;"
+□ Able to open: http://localhost/uiconf/api/event.php in browser
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DAY 2 FREEZE: What You Must Push                                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+BE-A pushes:
+  ✓ includes/db.php
+      └── db() function
+      └── PDO singleton
+      └── Error handling
+
+  ✓ includes/auth.php
+      └── current_user()
+      └── require_login()
+      └── require_role(...$roles)
+      └── login_user($userRow)
+      └── logout_user()
+
+
+BE-B pushes:
+  ✓ includes/response.php
+      └── json_response()
+      └── ok()
+      └── fail()
+      └── read_json()
+
+  ✓ includes/validate.php
+      └── require_method()
+      └── clean_string()
+      └── valid_email()
+      └── valid_int()
+      └── valid_money()
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ EVERY ENDPOINT MUST FOLLOW THIS ORDER                                       │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  1. require_method('POST');           ← Check HTTP method
+  2. require_login();                  ← Check auth (if needed)
+  3. require_role('admin');            ← Check role (if needed)
+  4. $data = read_json();              ← Read and parse input
+  5. $email = valid_email(...);        ← Validate input
+  6. [Database queries with prepared statements]
+  7. ok(...) or fail(...)              ← Return via response.php
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECURITY RULES (NON-NEGOTIABLE)                                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+✓ Use prepared statements for ALL database queries (no string concatenation)
+✓ Hash passwords with password_hash() (BE-A in register.php)
+✓ Validate all input server-side (never trust browser)
+✓ Never expose raw database errors to users (log internally)
+✓ Check HTTP method at the top of every endpoint
+✓ Check auth/role for protected endpoints
+✓ Use HttpOnly and SameSite cookies (in auth.php session setup)
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ IF YOU'RE STUCK                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+BE-A: "Can't connect to database"
+  → Check: mysql running, uiconf exists, config.php has right credentials
+
+BE-B: "Can't use BE-A's db.php"
+  → Check: db.php is pushed to develop, you've pulled latest, require() path is correct
+
+Both: "What's the deadline?"
+  → Day 2 freeze: helpers done
+  → Day 7: all endpoints live
+  → Day 11: all bugs fixed
+  → Day 14: submitted
+
+Both: "Code review questions?"
+  → Ask in group chat; one person reviews PR before merge
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ TESTING YOUR WORK LOCALLY (Before Pushing)                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+BE-A (test db.php):
+  $ php -r "require 'includes/db.php'; var_dump(db()->query('SELECT 1')->fetch());"
+  Expected: array(1) { ... }
+
+BE-A (test auth.php):
+  $ php -r "require 'includes/db.php'; require 'includes/auth.php'; echo 'Auth loaded';"
+
+BE-B (test response.php):
+  $ php -r "require 'includes/response.php'; echo 'Response loaded';"
+
+Both (test an endpoint):
+  $ curl http://localhost/uiconf/api/event.php
+  Expected: JSON with "success": true
+
+Both (test from browser):
+  Visit http://localhost/uiconf/api/me.php
+  Expected: { "success": true, "data": { "user": null }, ... }
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ GIT WORKFLOW                                                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+1. Create feature branch:
+   $ git checkout -b feature/db-connection      # BE-A
+   $ git checkout -b feature/response-helpers   # BE-B
+
+2. Code and test locally:
+   [write code, test, commit]
+   $ git add includes/db.php
+   $ git commit -m "feat: PDO connection with timezone setup"
+
+3. Push to origin:
+   $ git push origin feature/db-connection
+
+4. Create pull request (on GitHub):
+   → Ask one teammate to review
+   → Make any requested changes
+   → Merge to develop
+
+5. Never push directly to main (only after QA sign-off on Day 11)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                    Ready to start? Pick your part:
+
+            BE-A: Jump to "Building db.php" (next document)
+            BE-B: Jump to "Building response.php & validate.php"
+
+                        Questions? Ask in group chat.
+
+═══════════════════════════════════════════════════════════════════════════════
