@@ -3,6 +3,17 @@ require_once __DIR__ . '/db.php';
 
 if(session_status()===PHP_SESSION_NONE){
     session_start();
+
+// Configure session cookies for security
+    $params = session_get_cookie_params();
+    session_set_cookie_params([
+        'lifetime' => 86400,        // 24 hours
+        'path' => '/',
+        'domain' => '',
+        'secure' => false,          // Set to true in production (HTTPS)
+        'httponly' => true,         // Prevent JavaScript access (XSS protection)
+        'samesite' => 'Lax',        // CSRF protection
+    ]);
 }
 
 function current_user(){

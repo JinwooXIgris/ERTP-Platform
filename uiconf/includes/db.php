@@ -13,6 +13,12 @@ $dsn="mysql:host=$host;dbname=$dbname;charset=utf8mb4";
 try{
     $pdo=new PDO($dsn, $username,$password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Set MySQL timezone to Africa/Lagos (UTC+1)
+    $pdo->exec("SET time_zone = '+01:00'");
+    
+    // Disable emulation of prepared statements for security
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 }
 catch(PDOException $e){
     error_log("Database connection failed: ".$e->getMessage());
