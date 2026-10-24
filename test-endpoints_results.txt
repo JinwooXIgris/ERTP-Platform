@@ -1,0 +1,89 @@
+(base) PS C:\xampp\htdocs\uiconf> cd C:\xampp\htdocs\uiconf
+>> .\test-endpoints.ps1
+========================================                                                                                                   
+TESTING ALL 6 ENDPOINTS                                                                                                                    
+========================================                                                                                                   
+                                                                                                                                           
+Step 1: Logging in as admin...
+Invoke-WebRequest : Not Found
+The requested URL was not found on this server.
+Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12 Server at localhost Port 80
+At C:\xampp\htdocs\uiconf\test-endpoints.ps1:18 char:18
++ ... nResponse = Invoke-WebRequest -Uri "http://localhost/uiconf/api/login ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+Login successful. Session created.                                                                                                         
+                                                                                                                                           
+========================================                                                                                                   
+Test 1: GET /api/event.php                                                                                                                 
+========================================
+{"success":true,"message":"","data":{"event":{"id":1,"0":1,"title":"University of Ibadan Technology Conference 2026","1":"University of Ibadan Technology Conference 2026","event_date":"2026-11-20 09:00:00","2":"2026-11-20 09:00:00","venue":"Kunle Torimiro Centre, University of Ibadan, Ibadan, Oyo State, Nigeria","3":"Kunle Torimiro Centre, University of Ibadan, Ibadan, Oyo State, Nigeria","description":"A premier technology conference bringing together students, industry professionals, and academic leaders to discuss emerging trends in AI, cloud computing, fintech, and software development. Join 300+ attendees for keynotes, panel discussions, workshops, and networking opportunities.","4":"A premier technology conference bringing together students, industry professionals, and academic leaders to discuss emerging trends in AI, cloud computing, fintech, and software development. Join 300+ attendees for keynotes, panel discussions, workshops, and networking opportunities.","schedule":"09:00 - 10:00 Registration & Breakfast | 10:00 - 11:00 Keynote Address: \"AI and the Future of Work\" | 11:15 - 12:30 Panel Discussion: \"Building Tech Startups in Nigeria\" | 12:30 - 13:30 Lunch Break | 13:30 - 14:45 Workshop Track A: Cloud Architecture | 13:30 - 14:45 Workshop Track B: Mobile App Development | 15:00 - 16:00 Workshop Track C: Data Science & ML | 16:15 - 17:00 Closing Ceremony & Prize Giveaway","5":"09:00 - 10:00 Registration & Breakfast | 10:00 - 11:00 Keynote Address: \"AI and the Future of Work\" | 11:15 - 12:30 Panel Discussion: \"Building Tech Startups in Nigeria\" | 12:30 - 13:30 Lunch Break | 13:30 - 14:45 Workshop Track A: Cloud Architecture | 13:30 - 14:45 Workshop Track B: Mobile App Development | 15:00 - 16:00 Workshop Track C: Data Science & ML | 16:15 - 17:00 Closing Ceremony & Prize Giveaway","speakers":"Dr. Adebayo Okafor (Computer Science Dept., UI) | Chinedu Okoro (CTO, Paystack) | Zainab Al-Rashid (AI Research Lead, Google Africa) | Prof. Olayinka Abayomi (Department of Statistics, UI) | Yusuf Mohammed (Founder, TechNaija Hub)","6":"Dr. Adebayo Okafor (Computer Science Dept., UI) | Chinedu Okoro (CTO, Paystack) | Zainab Al-Rashid (AI Research Lead, Google Africa) | Prof. Olayinka Abayomi (Department of Statistics, UI) | Yusuf Mohammed (Founder, TechNaija Hub)"}},"errors":[]}
+
+========================================
+Test 2: GET /api/categories.php
+========================================
+{"success":true,"message":"","data":{"categories":[{"id":1,"name":"Student","price":"2000.00","quota":200,"remaining":200,"sold_out":false},{"id":2,"name":"Staff","price":"5000.00","quota":100,"remaining":100,"sold_out":false},{"id":3,"name":"General Public","price":"7500.00","quota":150,"remaining":150,"sold_out":false},{"id":4,"name":"VIP","price":"20000.00","quota":50,"remaining":50,"sold_out":false}]},"errors":[]}
+
+========================================
+Test 3: GET /api/admin/stats.php (admin only)
+========================================
+Invoke-WebRequest : Not Found
+The requested URL was not found on this server.
+Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12 Server at localhost Port 80
+At C:\xampp\htdocs\uiconf\test-endpoints.ps1:46 char:13
++ $response = Invoke-WebRequest -Uri "http://localhost/uiconf/api/admin ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+{"success":true,"message":"","data":{"categories":[{"id":1,"name":"Student","price":"2000.00","quota":200,"remaining":200,"sold_out":false},{"id":2,"name":"Staff","price":"5000.00","quota":100,"remaining":100,"sold_out":false},{"id":3,"name":"General Public","price":"7500.00","quota":150,"remaining":150,"sold_out":false},{"id":4,"name":"VIP","price":"20000.00","quota":50,"remaining":50,"sold_out":false}]},"errors":[]}
+
+========================================
+Test 4: GET /api/admin/attendees.php (admin only)
+========================================
+Invoke-WebRequest : Not Found
+The requested URL was not found on this server.
+Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12 Server at localhost Port 80
+At C:\xampp\htdocs\uiconf\test-endpoints.ps1:55 char:13
++ $response = Invoke-WebRequest -Uri "http://localhost/uiconf/api/admin ...                                                                
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                                    
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException               
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand                          
+{"success":true,"message":"","data":{"categories":[{"id":1,"name":"Student","price":"2000.00","quota":200,"remaining":200,"sold_out":false},{"id":2,"name":"Staff","price":"5000.00","quota":100,"remaining":100,"sold_out":false},{"id":3,"name":"General Public","price":"7500.00","quota":150,"remaining":150,"sold_out":false},{"id":4,"name":"VIP","price":"20000.00","quota":50,"remaining":50,"sold_out":false}]},"errors":[]}
+
+========================================
+Test 5: POST /api/admin/update-price.php (admin only)
+========================================
+Invoke-WebRequest : Not Found
+The requested URL was not found on this server.
+Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12 Server at localhost Port 80
+At C:\xampp\htdocs\uiconf\test-endpoints.ps1:69 char:13
++ $response = Invoke-WebRequest -Uri "http://localhost/uiconf/api/admin ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand                          
+{"success":true,"message":"","data":{"categories":[{"id":1,"name":"Student","price":"2000.00","quota":200,"remaining":200,"sold_out":false},{"id":2,"name":"Staff","price":"5000.00","quota":100,"remaining":100,"sold_out":false},{"id":3,"name":"General Public","price":"7500.00","quota":150,"remaining":150,"sold_out":false},{"id":4,"name":"VIP","price":"20000.00","quota":50,"remaining":50,"sold_out":false}]},"errors":[]}
+
+Verifying price changed in categories.php...
+Student category price is now: 2000.00
+
+========================================
+Test 6: POST /api/admin/update-event.php (admin only)
+========================================
+Invoke-WebRequest : Not Found
+The requested URL was not found on this server.
+Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12 Server at localhost Port 80
+At C:\xampp\htdocs\uiconf\test-endpoints.ps1:98 char:13
++ $response = Invoke-WebRequest -Uri "http://localhost/uiconf/api/admin ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+{"success":true,"message":"","data":{"categories":[{"id":1,"name":"Student","price":"2000.00","quota":200,"remaining":200,"sold_out":false},{"id":2,"name":"Staff","price":"5000.00","quota":100,"remaining":100,"sold_out":false},{"id":3,"name":"General Public","price":"7500.00","quota":150,"remaining":150,"sold_out":false},{"id":4,"name":"VIP","price":"20000.00","quota":50,"remaining":50,"sold_out":false}]},"errors":[]}
+
+Verifying event changed in event.php...
+Event title is now: University of Ibadan Technology Conference 2026
+
+========================================
+ALL TESTS COMPLETED
+========================================
+(base) PS C:\xampp\htdocs\uiconf> 
