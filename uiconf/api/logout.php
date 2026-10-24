@@ -3,19 +3,12 @@
 require_once __DIR__ . '/../includes/auth.php';
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../includes/response.php';
+require_once __DIR__ . '/../includes/validate.php';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Method not allowed.'
-    ]);
-
-    exit;
+   fail('Method not allowed.',405);
 }
 
 logout_user();
-echo json_encode([
-    'success' => true,
-    'message'=> 'Logout successful.'
-]);
+ok('Logout successful.',[]);

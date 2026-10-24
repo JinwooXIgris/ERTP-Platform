@@ -2,24 +2,17 @@
 require_once __DIR__ . '/../includes/db.php';
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../includes/response.php';
+
+require_once __DIR__ . '/../includes/validate.php';
+
+
 if($_SERVER['REQUEST_METHOD']!=='POST'){
-    http_response_code(405);
-    echo json_encode([
-        'success'=>false,
-        'message'=>'Method not allowed.'
-    ]);
-    
-    exit;
+     fail('Method not allowed.',405);
 }
     $input=json_decode(file_get_contents('php://input'),true);
     if(!is_array($input)){
-        http_response_code(400);
-        echo json_encode(['success'=>false,
-        'message'=>'Invalid request data.'
-        ]);
-       
-    
-     exit;
+        fail('Invalid request data.',400);
     }
 
 $fullName = trim($input['full_name'] ?? '');
@@ -35,51 +28,23 @@ if (
     $phone === '' ||
     $password === ''
 ) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Please fill in all required fields.'
-    ]);
-
-    exit;
+    fail('Please fill in all required fields.',400);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Please enter a valid email address.'
-    ]);
-
-    exit;
+     fail('Please enter a valid email address',422);
 }
 
 
 $allowedTypes = ['student', 'staff', 'public', 'vip'];
 
 if (!in_array($attendeeType, $allowedTypes, true)) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Invalid attendee type.'
-    ]);
-
-    exit;
+    fail('Invalid attendee type.',422);
 }
 
 
 if (strlen($password) < 8) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Password must be at least 8 characters long.'
-    ]);
-
-    exit;
+    fail('Password must be at least eight characters.',422);
 }
 
 
@@ -93,14 +58,7 @@ $stmt = $pdo->prepare(
 $stmt->execute([$email]);
 
 if ($stmt->fetch()) {
-    http_response_code(409);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'This email address is already registered.'
-    ]);
-
-    exit;
+   fail('This email is already registered.', 409);
 }
 
 
@@ -121,12 +79,6 @@ $stmt->execute([
     'attendee'
 ]);
 
-http_response_code(201);
-
-echo json_encode([
-    'success' => true,
-    'message' => 'Registration successful.'
-]);
-
+ok('Registration succesful.', [],201);
 
 
