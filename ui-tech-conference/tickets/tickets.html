@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Choose your ticket for the UI Technology Conference." name="description"/>
+<title>Choose Tickets | UI Tech Conference</title>
+<link href="../assets/css/global.css" rel="stylesheet"/>
+<link href="tickets.css" rel="stylesheet"/>
+<script defer="" src="tickets.js"></script>
+</head>
+<body class="tickets-page">
+<header class="ticket-header">
+<div class="header-inner">
+<a aria-label="UI Tech Conference home" class="brand" href="../index.html">
+<span class="logo-wrap"><img alt="University of Ibadan crest" class="ui-logo brand-logo" src="../assets/images/ui-logo.png"/><span aria-hidden="true" class="logo-fallback">UI</span></span>
+<span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span>
+</a>
+<nav aria-label="Main navigation" class="header-links"><a class="button-link" href="../index.html">Home</a><a href="../my-tickets/my-tickets.html">My tickets</a><a class="nav-login" href="../login/login.html">Sign in</a></nav>
+</div>
+</header>
+<main>
+<section class="hero container">
+<div class="hero-copy">
+<span class="eyebrow"><span class="eyebrow-dot"></span> YOUR CONFERENCE EXPERIENCE STARTS HERE</span>
+<h1>Choose your <span>ticket.</span></h1>
+<p>Select the ticket that works for you. You can review your order before proceeding to checkout.</p>
+<div class="hero-meta"><span><b aria-hidden="true">◷</b> Event date to be announced</span><span><b aria-hidden="true">⌖</b> University of Ibadan</span></div>
+</div>
+<div class="hero-image-wrap">
+<img alt="University of Ibadan campus or conference venue" class="hero-image" src="../assets/images/ui-campus.jpg"/>
+<div class="image-shade"></div>
+<div class="image-caption"><span class="caption-icon">✦</span><span><strong>Ideas. Innovation. Impact.</strong><small>Connect with the future of technology</small></span></div>
+<span class="image-hint">CHRIS-TEC</span>
+</div>
+</section>
+<section aria-labelledby="ticket-section-title" class="ticket-section container">
+<div class="section-heading"><div><span class="eyebrow">TICKET OPTIONS</span><h2 id="ticket-section-title">Find your pass</h2><p>Choose a category and select how many tickets you need.</p></div><div class="demo-label"><span></span> Sample prices — confirm with organisers</div></div>
+<div class="ticket-grid">
+<article class="ticket-card" data-ticket="student">
+<div class="card-top"><span aria-hidden="true" class="ticket-icon student-icon">▤</span><span class="ticket-tag">For students</span></div>
+<h3>Student Pass</h3><p class="ticket-description">For students who want to learn, connect and explore new ideas.</p>
+<div class="price-line"><strong>₦2,500</strong><span>/ person</span></div>
+<ul class="benefits"><li>Conference access</li><li>Talks and learning sessions</li><li>Digital ticket with QR-style code</li></ul>
+<div class="quantity-control"><label for="student-qty">Quantity</label><div class="stepper"><button aria-label="Remove one student ticket" data-step="-1" data-target="student-qty" type="button">−</button><input aria-label="Student ticket quantity" id="student-qty" inputmode="numeric" max="10" min="0" type="number" value="0"/><button aria-label="Add one student ticket" data-step="1" data-target="student-qty" type="button">+</button></div></div>
+<div class="line-total"><span>Ticket total</span><strong id="student-total">₦0</strong></div>
+</article>
+<article class="ticket-card featured" data-ticket="general">
+<div class="popular-ribbon">POPULAR CHOICE</div>
+<div class="card-top"><span aria-hidden="true" class="ticket-icon general-icon">✦</span><span class="ticket-tag">For everyone</span></div>
+<h3>General Pass</h3><p class="ticket-description">A great all-round pass for tech enthusiasts and professionals.</p>
+<div class="price-line"><strong>₦5,000</strong><span>/ person</span></div>
+<ul class="benefits"><li>Conference access</li><li>Talks and networking sessions</li><li>Digital ticket with QR-style code</li></ul>
+<div class="quantity-control"><label for="general-qty">Quantity</label><div class="stepper"><button aria-label="Remove one general ticket" data-step="-1" data-target="general-qty" type="button">−</button><input aria-label="General ticket quantity" id="general-qty" inputmode="numeric" max="10" min="0" type="number" value="0"/><button aria-label="Add one general ticket" data-step="1" data-target="general-qty" type="button">+</button></div></div>
+<div class="line-total"><span>Ticket total</span><strong id="general-total">₦0</strong></div>
+</article>
+<article class="ticket-card" data-ticket="vip">
+<div class="card-top"><span aria-hidden="true" class="ticket-icon vip-icon">♛</span><span class="ticket-tag">Premium access</span></div>
+<h3>VIP Pass</h3><p class="ticket-description">A premium pass for guests seeking an enhanced conference experience.</p>
+<div class="price-line"><strong>₦15,000</strong><span>/ person</span></div>
+<ul class="benefits"><li>Conference access</li><li>Priority seating area</li><li>Digital ticket with QR-style code</li></ul>
+<div class="quantity-control"><label for="vip-qty">Quantity</label><div class="stepper"><button aria-label="Remove one VIP ticket" data-step="-1" data-target="vip-qty" type="button">−</button><input aria-label="VIP ticket quantity" id="vip-qty" inputmode="numeric" max="10" min="0" type="number" value="0"/><button aria-label="Add one VIP ticket" data-step="1" data-target="vip-qty" type="button">+</button></div></div>
+<div class="line-total"><span>Ticket total</span><strong id="vip-total">₦0</strong></div>
+</article>
+</div>
+<aside aria-label="Order summary" class="order-bar">
+<div class="order-copy"><span aria-hidden="true" class="order-icon">▣</span><div><strong>Your selection</strong><p aria-live="polite" id="selection-count">No tickets selected yet</p></div></div>
+<div class="order-total"><span>Estimated total</span><strong id="grand-total">₦0</strong></div>
+<button class="continue-button" disabled="" id="continue-button" type="button">Continue to checkout <span aria-hidden="true">→</span></button>
+</aside>
+<p class="page-note"><strong>Note:</strong> Ticket types, benefits and prices shown here are sample content for frontend development, not confirmed conference details. The PHP backend must validate final prices and availability before an order is created.</p>
+<div aria-live="polite" class="status-message" hidden="" id="status-message" role="status"></div>
+</section>
+</main>
+<footer class="ticket-footer"><div class="container footer-inner"><span>© <span id="current-year">2026</span> UI Tech Conference</span><a href="../index.html">Back to event homepage</a></div></footer>
+</body>
+</html>

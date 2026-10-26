@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="#102f68" name="theme-color"/>
+<title>My Digital Ticket | UI Tech Conference</title>
+<link href="ticket-view.css" rel="stylesheet"/>
+<link href="../assets/css/global.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header">
+<a aria-label="UI Tech Conference home" class="brand" href="../index.html">
+<img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/>
+<span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span>
+</a>
+<a class="back-link" href="../my-tickets/my-tickets.html"> My tickets</a>
+</header>
+<main class="page-wrap">
+<section class="intro">
+<p class="eyebrow">ATTENDEE PASS</p>
+<h1>Your digital ticket</h1>
+<p>Keep this ticket handy for event check-in. Your ticket must be confirmed by the platform before it can be used for entry.</p>
+</section>
+<article aria-label="Digital ticket preview" class="ticket-card">
+<div class="ticket-banner">
+<img alt="University of Ibadan brand banner" class="brand-banner" src="../assets/images/ui-brand-banner.png"/>
+<div class="event-label"><span>UNIVERSITY OF IBADAN</span><strong>TECHNOLOGY CONFERENCE</strong><small>CONNECT · LEARN · INNOVATE</small></div>
+</div>
+<div class="ticket-body">
+<div class="ticket-topline"><span class="status-pill" id="ticketStatus">DEMO TICKET</span><span class="pass-type" id="passType">GENERAL PASS</span></div>
+<h2 id="attendeeName">Attendee Name</h2>
+<p class="attendee-email" id="attendeeEmail">attendee@example.com</p>
+<div class="details-grid">
+<div><span class="detail-label">TICKET REFERENCE</span><strong id="ticketReference">UI-2026-DEMO01</strong></div>
+<div><span class="detail-label">TICKET TYPE</span><strong id="ticketType">General Pass</strong></div>
+<div><span class="detail-label">QUANTITY</span><strong id="ticketQuantity">1</strong></div>
+<div><span class="detail-label">AMOUNT</span><strong id="ticketAmount">₦5,000</strong></div>
+</div>
+<div class="ticket-divider"><span></span><span></span></div>
+<div class="entry-row">
+<div class="entry-copy"><strong>Present your ticket at check-in</strong><p>Staff will verify your ticket reference or scan a valid QR code once ticket verification is connected.</p></div>
+<div aria-label="Illustrative QR code placeholder" class="qr-placeholder"><div class="qr-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><small>DEMO ONLY</small></div>
+</div>
+</div>
+<div class="ticket-footer"><span>UI TECH CONFERENCE</span><span>RETAIN FOR CHECK-IN</span></div>
+</article>
+<div class="notice" id="demoNotice"><strong>Preview mode:</strong> This is a sample digital ticket. The QR-style graphic is not scannable, and this ticket does not confirm payment or grant event entry.</div>
+<div class="actions"><button class="primary-btn" id="printTicket">Print / Save as PDF</button><a class="secondary-btn" href="../my-tickets/my-tickets.html">View my tickets</a></div>
+<p class="help-text">For a real event ticket, the server must issue a unique reference and scannable QR code only after payment has been verified.</p>
+</main>
+<footer class="site-footer">© 2026 UI Tech Conference · University of Ibadan</footer>
+<script src="ticket-view.js"></script>
+</body>
+</html>

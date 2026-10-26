@@ -1,0 +1,124 @@
+:root { --login-navy: #101d3a; --login-blue: #1d4ed8; --login-muted: #69758b; }
+.login-page { min-height: 100vh; background: #f5f7fb; }
+.login-header { position: relative; }
+.login-brand { gap: 12px; }
+.brand-image-wrap { position: relative; display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; }
+.university-logo { width: 44px; height: 44px; object-fit: contain; border-radius: 50%; background: #fff; }
+.brand-fallback { position: absolute; inset: 0; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #173da8, #14a085); }
+.brand-image-wrap.has-logo .brand-fallback { display: none; }
+.back-link { min-height: 42px; }
+.login-main { padding: clamp(24px, 5vw, 58px) 20px; }
+.login-shell { width: min(1080px, 100%); min-height: 650px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(390px, .88fr); overflow: hidden; border: 1px solid #e4e9f2; border-radius: 28px; background: #fff; box-shadow: 0 28px 80px rgba(16, 29, 58, .11); }
+.login-visual { position: relative; isolation: isolate; display: flex; min-height: 650px; align-items: flex-end; overflow: hidden; padding: clamp(28px, 4vw, 54px); color: white; background: linear-gradient(145deg, #173da8, #10264d 65%, #0c1833); }
+.campus-photo { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: .62; }
+.visual-overlay { position: absolute; z-index: -1; inset: 0; background: linear-gradient(180deg, rgba(11,24,52,.12) 0%, rgba(11,24,52,.48) 40%, rgba(11,24,52,.96) 100%), linear-gradient(135deg, rgba(29,78,216,.34), transparent 70%); }
+.visual-content { width: 100%; max-width: 470px; }
+.visual-kicker { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 22px; padding: 8px 12px; border: 1px solid rgba(255,255,255,.28); border-radius: 99px; background: rgba(255,255,255,.1); backdrop-filter: blur(10px); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #62e6bd; box-shadow: 0 0 0 4px rgba(98,230,189,.14); }
+.visual-content h1 { max-width: 480px; margin: 0 0 18px; font-size: clamp(34px, 4.2vw, 54px); line-height: 1.04; letter-spacing: -.055em; }
+.visual-content > p { max-width: 430px; margin: 0; color: rgba(255,255,255,.78); font-size: 15px; line-height: 1.8; }
+.visual-footer { display: flex; align-items: center; gap: 12px; margin-top: 42px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.22); }
+.visual-seal { display: grid; place-items: center; width: 43px; height: 43px; border: 1px solid rgba(255,255,255,.6); border-radius: 50%; font-family: Georgia, serif; font-size: 14px; font-weight: 800; }
+.visual-footer strong, .visual-footer small { display: block; }
+.visual-footer strong { font-size: 13px; }
+.visual-footer small { margin-top: 3px; color: rgba(255,255,255,.68); font-size: 11px; }
+.image-credit-note { position: absolute; top: 18px; left: 20px; padding: 6px 9px; border-radius: 6px; color: rgba(255,255,255,.8); background: rgba(11,24,52,.45); font-size: 10px; }
+.login-panel { display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 4vw, 58px); }
+.login-heading { margin-bottom: 30px; }
+.login-heading .eyebrow { font-size: 10px; letter-spacing: .15em; }
+.login-heading h2 { margin: 13px 0 8px; color: var(--login-navy); font-size: clamp(31px, 3vw, 39px); line-height: 1.1; letter-spacing: -.05em; }
+.login-heading p { margin: 0; color: var(--login-muted); font-size: 14px; }
+.login-form { display: grid; gap: 21px; }
+.form-field { min-width: 0; }
+.form-field > label, .label-row > label { display: block; margin-bottom: 9px; color: #26334b; font-size: 12px; font-weight: 800; }
+.label-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.input-wrap { display: flex; align-items: center; min-height: 53px; gap: 11px; padding: 0 14px; border: 1px solid #dce3ee; border-radius: 12px; background: #fbfcfe; transition: border-color .18s, box-shadow .18s, background .18s; }
+.input-wrap:focus-within { border-color: #7195f4; background: #fff; box-shadow: 0 0 0 4px rgba(29,78,216,.09); }
+.input-icon { color: #8290a6; font-size: 16px; }
+.input-wrap input { width: 100%; min-width: 0; height: 50px; padding: 0; border: 0; outline: 0; color: #17233b; background: transparent; font-size: 13px; }
+.input-wrap input::placeholder { color: #9aa5b6; }
+.password-toggle, .text-button { padding: 5px 0; border: 0; color: var(--login-blue); background: transparent; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.password-toggle:hover, .text-button:hover { text-decoration: underline; }
+.field-error { display: block; min-height: 0; margin-top: 5px; color: #c62828; font-size: 11px; }
+.field-error:not(:empty) { min-height: 15px; }
+.form-options { display: flex; justify-content: space-between; align-items: center; margin-top: -5px; }
+.remember-option { display: inline-flex; align-items: center; gap: 8px; color: #65738a; font-size: 12px; cursor: pointer; }
+.remember-option input { width: 15px; height: 15px; margin: 0; accent-color: var(--login-blue); }
+.sign-in-button { width: 100%; min-height: 52px; justify-content: space-between; padding-inline: 19px; border: 0; }
+.sign-in-button span:first-child { flex: 1; text-align: center; }
+.form-message { padding: 12px 13px; border-radius: 10px; font-size: 12px; line-height: 1.55; }
+.form-message.is-info { color: #214b91; background: #eef5ff; border: 1px solid #d8e7ff; }
+.form-message.is-error { color: #a52222; background: #fff0f0; border: 1px solid #ffd9d9; }
+.signup-prompt { margin: 25px 0 0; color: #65738a; text-align: center; font-size: 12px; }
+.signup-prompt a { color: var(--login-blue); font-weight: 850; }
+.signup-prompt a:hover { text-decoration: underline; }
+.secure-note { display: flex; align-items: flex-start; gap: 9px; margin-top: 27px; padding: 12px; border-radius: 10px; color: #718097; background: #f5f7fb; font-size: 10px; line-height: 1.6; }
+.secure-note > span:first-child { color: #168a71; font-size: 16px; }
+.demo-note { margin: 13px 0 0; color: #8a94a5; font-size: 10px; line-height: 1.6; text-align: center; }
+.mobile-logo-row { display: none; }
+.login-footer { background: #fff; }
+@media (max-width: 900px) {
+  .login-shell { grid-template-columns: minmax(0, .85fr) minmax(360px, 1fr); }
+  .login-visual { padding: 30px; }
+  .login-panel { padding: 34px; }
+  .visual-content h1 { font-size: clamp(32px, 4vw, 44px); }
+}
+@media (max-width: 720px) {
+  .login-main { padding: 20px 14px 30px; }
+  .login-shell { max-width: 520px; min-height: 0; grid-template-columns: 1fr; border-radius: 22px; }
+  .login-visual { display: none; }
+  .login-panel { padding: clamp(24px, 6vw, 36px); }
+  .mobile-logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+  .mobile-logo-row > span:last-child strong, .mobile-logo-row > span:last-child small { display: block; }
+  .mobile-logo-row > span:last-child strong { font-size: 13px; }
+  .mobile-logo-row > span:last-child small { margin-top: 3px; color: var(--login-muted); font-size: 10px; }
+  .mobile-university-logo, .mobile-logo-fallback { width: 43px; height: 43px; border-radius: 50%; object-fit: contain; background: white; }
+  .mobile-logo-fallback { display: none; place-items: center; color: white; background: linear-gradient(135deg, #173da8, #14a085); font-weight: 800; }
+  .mobile-logo-row.logo-missing .mobile-logo-fallback { display: grid; }
+  .mobile-logo-row.logo-missing .mobile-university-logo { display: none; }
+  .login-heading { margin-bottom: 25px; }
+}
+@media (max-width: 420px) {
+  .login-header .navbar { gap: 8px; }
+  .login-brand { gap: 8px; }
+  .brand-copy { font-size: 12px; }
+  .brand-copy small { font-size: 8px; letter-spacing: .08em; }
+  .brand-image-wrap, .university-logo, .brand-fallback { width: 38px; height: 38px; }
+  .brand-image-wrap { flex-basis: 38px; }
+  .back-link { min-height: 38px; padding-inline: 10px; font-size: 11px; }
+  .label-row { align-items: flex-start; }
+}
+
+/* Compact, squared-off controls and consistent crest sizing. */
+.button-link, a.button-link, .nav-button {
+  display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
+  min-height:36px; padding:.45rem .75rem; border:1px solid var(--line, #dfe6ee);
+  border-radius:4px; background:#fff; color:var(--ink, #172338); text-decoration:none;
+  font-size:12px; font-weight:750; line-height:1.25; cursor:pointer;
+  transition:transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+}
+.button-link:hover, .nav-button:hover {
+  transform:translateY(-1px); background:#f5f8ff; border-color:#b7c8e5; color:var(--brand-dark, #173da8);
+}
+.brand-logo { display:block; flex:0 0 auto; width:38px; height:46px; max-width:none; max-height:none; object-fit:contain; border-radius:0; background:transparent; }
+.event-logo { display:block; width:44px; height:44px; object-fit:contain; border-radius:4px; background:transparent; }
+@media(max-width:600px) { .brand-logo { width:34px; height:40px; } }
+
+/* Login header and form controls use a compact, clean brand treatment. */
+.login-navbar { min-height:70px; }
+.login-brand { gap:10px; padding:0; border:0; background:transparent; }
+.login-brand:hover { background:transparent; border-color:transparent; color:var(--ink); }
+.login-brand .brand-copy strong { color:var(--login-navy); font-size:14px; }
+.login-brand .brand-copy small { color:var(--login-muted); font-size:9px; }
+.brand-image-wrap { width:38px; height:46px; flex:0 0 38px; }
+.university-logo { width:34px; height:44px; border-radius:0; object-fit:contain; background:transparent; }
+.brand-fallback { position:absolute; inset:0; width:38px; height:46px; display:none; place-items:center; color:#fff; font-size:12px; font-weight:800; border-radius:4px; }
+.brand-image-wrap:not(.has-logo) .brand-fallback { display:grid; }
+.back-link { min-height:38px; padding:0 12px; border-radius:4px; gap:7px; }
+.sign-in-button { min-height:44px; padding-inline:15px; border-radius:4px; }
+.form-message.is-success { color:#145c49; background:#eaf8f2; border:1px solid #c7eddf; }
+.visual-seal { width:46px; height:46px; border-radius:4px; }
+.visual-seal img { width:29px; height:37px; object-fit:contain; border-radius:0; }
+.mobile-university-logo, .mobile-logo-fallback { width:36px; height:44px; border-radius:0; object-fit:contain; background:transparent; }
+.mobile-logo-fallback { border-radius:4px; }
+@media(max-width:420px) { .login-brand { gap:7px; } .login-brand .brand-copy strong { font-size:12px; } .back-link { min-height:36px; padding-inline:9px; font-size:11px; } }
