@@ -1,5 +1,5 @@
 /* Shared Fetch API helper for PHP endpoints. */
-const API_BASE_URL = "/api";
+const API_BASE_URL = "TP-B/api/";
 async function apiRequest(endpoint, options = {}) {
   const config = {
     method: options.method || "GET",
