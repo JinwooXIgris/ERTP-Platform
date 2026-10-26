@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Payment Result | UI Tech Conference</title>
+<link href="payment-result.css" rel="stylesheet"/>
+<script defer="" src="payment-result.js"></script>
+<link href="../assets/css/global.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="topbar">
+<a aria-label="UI Tech Conference home" class="brand" href="../index.html"><img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/><span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span></a>
+<nav aria-label="Main navigation">
+<a class="button-link" href="../index.html">Home</a>
+<a href="../tickets/tickets.html">Tickets</a>
+<a href="../my-tickets/my-tickets.html">My Tickets</a>
+</nav>
+</header>
+<main class="page">
+<section class="result-card">
+<div aria-hidden="true" class="status-icon pending" id="status-icon">…</div>
+<p class="eyebrow">PAYMENT STATUS</p>
+<h1 id="status-title">Checking your payment</h1>
+<p class="description" id="status-description">Please wait while the payment result is confirmed.</p>
+<div class="details" id="order-details">
+<div><span>Order reference</span><strong id="order-reference">Not available</strong></div>
+<div><span>Payment status</span><strong id="payment-status">Pending confirmation</strong></div>
+</div>
+<div class="actions" id="action-area">
+<a class="button primary" href="../my-tickets/my-tickets.html">Go to My Tickets</a>
+<a class="button secondary" href="../tickets/tickets.html">Back to Tickets</a>
+</div>
+<p class="security-note">This page is a frontend template. The backend must verify the payment with the payment provider before confirming an order or issuing a digital ticket.</p>
+</section>
+</main>
+<footer>UI Tech Conference · Payment result preview</footer>
+</body>
+</html>

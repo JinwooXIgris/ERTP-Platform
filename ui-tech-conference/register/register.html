@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#101b3b" name="theme-color"/>
+<meta content="Create your attendee account for the University of Ibadan Technology Conference." name="description"/>
+<title>Create account | UI Tech Conference</title>
+<link href="../shared/global.css" rel="stylesheet"/>
+<link href="register.css" rel="stylesheet"/>
+<script defer="" src="../shared/api.js"></script>
+<script defer="" src="register.js"></script>
+</head>
+<body class="register-page">
+<header class="register-header">
+<div class="register-header-inner">
+<a aria-label="UI Tech Conference home" class="brand register-brand" href="../index.html"><img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/><span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span></a>
+<div class="header-login"><span>Already registered?</span> <a href="../login/login.html">Sign in <span aria-hidden="true">↗</span></a></div>
+</div>
+</header>
+<main class="register-layout">
+<section aria-labelledby="story-title" class="register-story">
+<div class="story-topline"><span class="live-dot"></span> YOUR NEXT BIG IDEA STARTS HERE</div>
+<div class="story-copy">
+<p class="story-kicker">Connect. Learn. Build the future.</p>
+<h1 id="story-title">Ideas grow<br/>better <span>together.</span></h1>
+<p class="story-description">Join curious minds, creators, and technology leaders for conversations that move ideas forward.</p>
+</div>
+<!-- IMAGE SPACE: Replace this visual-stage block with an image element when your photo is ready.
+           Example: <img class="conference-photo" src="../assets/images/ui-campus.jpg" alt="Attendees at a technology conference"> -->
+<div aria-label="Decorative technology conference illustration placeholder" class="visual-stage" role="img">
+<div class="visual-grid"></div>
+<div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+<div class="visual-chip chip-one">&lt;/&gt;</div>
+<div class="visual-chip chip-two">AI<span>+</span></div>
+<div class="visual-chip chip-three">✳</div>
+<div class="stage-glow"></div>
+<div aria-hidden="true" class="stage-illustration">
+<div class="screen-stand"></div>
+<div class="screen"><span class="screen-small">UI TECH</span><strong>THE<br/>FUTURE<br/>IS OPEN.</strong><i></i></div>
+<div class="person person-left"><span class="person-head"></span><span class="person-body"></span></div>
+<div class="person person-mid"><span class="person-head"></span><span class="person-body"></span></div>
+<div class="person person-right"><span class="person-head"></span><span class="person-body"></span></div>
+<div class="stage-floor"></div>
+</div>
+<div class="image-hint"><span class="hint-icon">✦</span><span><strong>Your conference image goes here</strong><small>Replace this illustration with your event photo</small></span></div>
+</div>
+<div class="story-proof">
+<div aria-hidden="true" class="proof-avatars"><span>U</span><span>T</span><span>+</span></div>
+<p><strong>One community. Many possibilities.</strong><br/><span>Be part of the conversation.</span></p>
+</div>
+<div class="story-footer"><span>DESIGNED FOR THE CURIOUS</span><span>01 — CREATE YOUR ACCOUNT</span></div>
+</div></section>
+<section aria-labelledby="form-title" class="register-panel">
+<div class="form-shell">
+<div class="form-heading">
+<div class="step-label"><span>01</span><span class="step-line"></span><span>ATTENDEE REGISTRATION</span></div>
+<h2 id="form-title">Create your account</h2>
+<p>Start your conference experience. It only takes a minute.</p>
+</div>
+<div aria-live="polite" class="form-alert" hidden="" id="form-alert" role="status"></div>
+<form id="register-form" novalidate="">
+<div class="field-group">
+<label for="full-name">Full name <span>*</span></label>
+<div class="input-wrap"><span aria-hidden="true" class="field-icon">♙</span><input autocomplete="name" id="full-name" maxlength="100" minlength="2" name="name" placeholder="e.g. Adebayo Johnson" required="" type="text"/></div>
+<small class="field-error" id="name-error"></small>
+</div>
+<div class="field-row">
+<div class="field-group">
+<label for="email">Email address <span>*</span></label>
+<div class="input-wrap"><span aria-hidden="true" class="field-icon">@</span><input autocomplete="email" id="email" maxlength="150" name="email" placeholder="you@example.com" required="" type="email"/></div>
+<small class="field-error" id="email-error"></small>
+</div>
+<div class="field-group">
+<label for="phone">Phone number <span>*</span></label>
+<div class="input-wrap"><span aria-hidden="true" class="field-icon">⌕</span><input autocomplete="tel" id="phone" maxlength="20" minlength="7" name="phone" placeholder="080 1234 5678" required="" type="tel"/></div>
+<small class="field-error" id="phone-error"></small>
+</div>
+</div>
+<div class="field-group">
+<label for="attendee-type">I’m attending as <span>*</span></label>
+<div class="select-wrap"><span aria-hidden="true" class="field-icon">◇</span><select id="attendee-type" name="attendee_type" required=""><option disabled="" selected="" value="">Select your attendee type</option><option value="student">Student</option><option value="staff">University staff</option><option value="public">General public</option><option value="vip">VIP guest</option></select><span aria-hidden="true" class="select-arrow">⌄</span></div>
+<small class="field-error" id="type-error"></small>
+</div>
+<div class="field-row">
+<div class="field-group">
+<label for="password">Create password <span>*</span></label>
+<div class="input-wrap"><span aria-hidden="true" class="field-icon">▣</span><input autocomplete="new-password" id="password" minlength="8" name="password" placeholder="At least 8 characters" required="" type="password"/><button aria-label="Show password" class="password-toggle" data-target="password" type="button">Show</button></div>
+<small class="field-note">Use at least 8 characters.</small><small class="field-error" id="password-error"></small>
+</div>
+<div class="field-group">
+<label for="confirm-password">Confirm password <span>*</span></label>
+<div class="input-wrap"><span aria-hidden="true" class="field-icon">▣</span><input autocomplete="new-password" id="confirm-password" name="confirm_password" placeholder="Enter it again" required="" type="password"/><button aria-label="Show confirmation password" class="password-toggle" data-target="confirm-password" type="button">Show</button></div>
+<small class="field-error" id="confirm-error"></small>
+</div>
+</div>
+<label class="terms-check" for="terms"><input id="terms" name="terms" required="" type="checkbox"/><span aria-hidden="true" class="custom-check"></span><span>I agree to the event <a class="terms-link" href="#terms-note">terms and conditions</a> and confirm that my details are accurate.</span></label>
+<small class="field-error terms-error" id="terms-error"></small>
+<p class="privacy-note"><span aria-hidden="true">♢</span> Your information is used to manage your registration and conference tickets.</p>
+<button class="btn btn-primary submit-button" id="submit-button" type="submit"><span>Create my account</span><span aria-hidden="true">→</span></button>
+<p class="signin-prompt">Already have an account? <a href="../login/login.html">Sign in instead</a></p>
+</form>
+<p class="form-footnote" id="terms-note">By registering, you’ll be able to select tickets and access your digital ticket after successful payment.</p>
+</div>
+</section>
+</main>
+<footer class="register-footer"><span>© <span id="current-year"></span> UI Tech Conference</span><span>University of Ibadan · Technology · Community</span><a class="button-link" href="../index.html">Back to event page</a></footer>
+</body>
+</html>

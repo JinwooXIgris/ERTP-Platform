@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="View your UI Technology Conference tickets." name="description"/>
+<title>My Tickets | UI Technology Conference</title>
+<link href="my-tickets.css" rel="stylesheet"/>
+<link href="../assets/css/global.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header">
+<a aria-label="UI Tech Conference home" class="brand" href="../index.html"><img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/><span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span></a>
+<nav><a class="button-link" href="../index.html">Home</a><a class="active" href="../tickets/tickets.html">My tickets</a><a href="../tickets/tickets.html">Get tickets</a></nav>
+<a class="profile-link" href="../login/login.html">My account</a>
+</header>
+<main>
+<section class="hero">
+<img alt="University of Ibadan banner" class="brand-banner" src="../assets/images/ui-brand-banner.png"/>
+<div class="hero-copy"><span class="eyebrow">ATTENDEE DASHBOARD</span><h1>My tickets</h1><p>All your conference passes, together in one place.</p></div>
+</section>
+<section class="content">
+<div class="section-heading"><div><h2>Your passes</h2><p>Open a ticket to view its details or prepare it for printing.</p></div><a class="button button-outline" href="../tickets/tickets.html">+ Get a ticket</a></div>
+<div class="notice" hidden="" id="notice" role="status"></div>
+<div aria-live="polite" class="ticket-list" id="ticket-list"></div>
+<div class="empty-state" hidden="" id="empty-state"><div class="empty-icon">▤</div><h2>No tickets to show yet</h2><p>When you have a ticket order, it will appear here. Choose a pass to get started.</p><a class="button" href="../tickets/tickets.html">Explore tickets</a></div>
+<div class="help-card"><div class="help-icon">?</div><div><h3>Need help with a ticket?</h3><p>Keep your ticket reference safe. If a payment is pending, wait for confirmation before treating the ticket as valid.</p></div></div>
+</section>
+</main>
+<footer><img alt="University of Ibadan logo" src="../assets/images/ui-logo.png"/><span>University of Ibadan Technology Conference</span><span class="footer-note">Ticket details shown here are demo data until connected to the PHP backend.</span></footer>
+<script src="my-tickets.js"></script>
+</body></html>

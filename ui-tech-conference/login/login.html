@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Sign in to your UI Technology Conference attendee account." name="description"/>
+<title>Sign in | UI Tech Conference</title>
+<link href="../assets/css/global.css" rel="stylesheet"/>
+<link href="login.css" rel="stylesheet"/>
+<script defer="" src="../shared/api.js"></script>
+<script defer="" src="login.js"></script>
+</head>
+<body class="login-page">
+<a class="skip-link" href="#login-form">Skip to sign in form</a>
+<header class="site-header login-header">
+<div class="container navbar login-navbar">
+<a aria-label="UI Tech Conference home" class="brand login-brand" href="../index.html">
+<span class="brand-image-wrap"><img alt="University of Ibadan crest" class="university-logo" src="../assets/images/ui-logo.png"/><span aria-hidden="true" class="brand-fallback">UI</span></span>
+<span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span>
+</a>
+<a class="btn btn-secondary back-link" href="../index.html"><span aria-hidden="true">←</span> Back to event</a>
+</div>
+</header>
+<main class="login-main">
+<div class="login-shell">
+<section aria-label="Conference welcome" class="login-visual">
+<!-- campus bg here -->
+<img alt="University of Ibadan campus" class="campus-photo" src="../assets/images/ui-campus.jpg"/>
+<div aria-hidden="true" class="visual-overlay"></div>
+<div class="visual-content">
+<span class="visual-kicker"><span class="live-dot"></span> Ideas. Innovation. Impact.</span>
+<h1>Your next big idea starts with a connection.</h1>
+<p>Sign in to manage your conference registration, tickets, and event updates in one place.</p>
+<div class="visual-footer">
+<span aria-hidden="true" class="visual-seal"><img alt="" src="../assets/images/ui-logo.png"/></span>
+<span><strong>University of Ibadan</strong><small>Technology Conference</small></span>
+</div>
+</div>
+</section>
+<section aria-labelledby="login-title" class="login-panel">
+<div class="mobile-logo-row">
+<img alt="University of Ibadan logo" class="mobile-university-logo" src="../assets/images/ui-logo.png"/>
+<span aria-hidden="true" class="mobile-logo-fallback">UI</span>
+<span><strong>UI Tech Conference</strong><small>Attendee portal</small></span>
+</div>
+<div class="login-heading">
+<span class="eyebrow">Attendee portal</span>
+<h2 id="login-title">Welcome back</h2>
+<p>Enter your details to access your account.</p>
+</div>
+<form class="login-form" id="login-form" novalidate="">
+<div class="form-field">
+<label for="email">Email address</label>
+<div class="input-wrap">
+<span aria-hidden="true" class="input-icon">✉</span>
+<input autocomplete="email" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+<small class="field-error" id="email-error"></small>
+</div>
+<div class="form-field">
+<div class="label-row">
+<label for="password">Password</label>
+<button class="text-button forgot-password" id="forgot-password" type="button">Forgot password?</button>
+</div>
+<div class="input-wrap">
+<span aria-hidden="true" class="input-icon lock-icon">▣</span>
+<input autocomplete="current-password" id="password" minlength="8" name="password" placeholder="Enter your password" required="" type="password"/>
+<button aria-label="Show password" aria-pressed="false" class="password-toggle" id="toggle-password" type="button">Show</button>
+</div>
+<small class="field-error" id="password-error"></small>
+</div>
+<div class="form-options">
+<label class="remember-option" for="remember-me"><input id="remember-me" name="remember-me" type="checkbox"/><span>Remember me</span></label>
+</div>
+<div aria-live="polite" class="form-message" hidden="" id="form-message" role="status"></div>
+<button class="btn btn-primary sign-in-button" id="sign-in-submit" type="submit"><span>Sign in</span><span aria-hidden="true">→</span></button>
+</form>
+<p class="signup-prompt">New to the conference? <a href="../register/register.html">Create an account</a></p>
+<div class="secure-note"><span aria-hidden="true">♧</span><span>Your account details should be kept private.
+            Never share your password.</span></div>
+</section>
+</div>
+</main>
+<footer class="site-footer login-footer">
+<div class="container footer-row"><span>© <span id="current-year">2026</span> UI Tech Conference</span><a class="button-link" href="../index.html">Return to homepage</a></div>
+</footer>
+</body>
+</html>

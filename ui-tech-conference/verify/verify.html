@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Ticket Verification | UI Tech Conference</title>
+<link href="verify.css" rel="stylesheet"/>
+<script defer="" src="verify.js"></script>
+<link href="../assets/css/global.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="topbar">
+<a aria-label="UI Tech Conference home" class="brand" href="../index.html"><img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/><span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span></a>
+<nav aria-label="Main navigation">
+<a class="button-link" href="../index.html">Home</a>
+<a href="../my-tickets/my-tickets.html">My Tickets</a>
+<a class="active" href="verify.html">Verify Ticket</a>
+</nav>
+</header>
+<main class="page">
+<section class="intro">
+<p class="eyebrow">STAFF PORTAL</p>
+<h1>Verify a ticket</h1>
+<p>Enter the ticket reference to check it. QR scanning and live validation require backend integration.</p>
+</section>
+<section class="layout">
+<div class="panel">
+<div class="panel-heading"><div aria-hidden="true" class="icon-box">✓</div><div><h2>Ticket lookup</h2><p>Use the reference printed on the digital ticket.</p></div></div>
+<form id="verify-form">
+<label for="ticket-reference">Ticket reference</label>
+<div class="input-row">
+<input autocomplete="off" id="ticket-reference" name="ticketReference" placeholder="e.g. UITC-2026-000123" required="" type="text"/>
+<button id="verify-button" type="submit">Verify</button>
+</div>
+<p class="hint">This demo captures the reference only; it does not confirm that a ticket is valid.</p>
+</form>
+<div aria-live="polite" class="result" hidden="" id="verification-result" role="status"></div>
+<div class="divider"><span>OR</span></div>
+<div class="scanner"><div aria-hidden="true" class="qr-icon">▦</div><div><h3>Scan QR code</h3><p>QR scanning will be added with a scanner library and the backend verification endpoint.</p></div></div>
+</div>
+<aside class="panel checklist">
+<h2>Before admitting an attendee</h2>
+<ul>
+<li><span>1</span><div><strong>Check ticket status</strong><p>Confirm the ticket is paid and valid.</p></div></li>
+<li><span>2</span><div><strong>Match attendee details</strong><p>Compare the displayed attendee details when required.</p></div></li>
+<li><span>3</span><div><strong>Prevent reuse</strong><p>The backend should mark a ticket as used after entry.</p></div></li>
+</ul>
+<p class="notice"><strong>Security note:</strong> A frontend message is not proof of payment. The backend must validate the ticket and check-in status.</p>
+</aside>
+</section>
+<p class="back-link"><a class="button-link" href="../admin/admin-dashboard.html">← Back to Admin Dashboard</a></p>
+</main>
+<footer>UI Tech Conference · Ticketing and attendee check-in</footer>
+</body>
+</html>

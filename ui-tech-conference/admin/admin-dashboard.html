@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Admin Dashboard | UI Tech Conference</title>
+<link href="admin-dashboard.css" rel="stylesheet"/>
+<script defer="" src="admin-dashboard.js"></script>
+<link href="../assets/css/global.css" rel="stylesheet"/>
+</head>
+<body>
+<aside class="sidebar">
+<a aria-label="UI Tech Conference home" class="brand" href="../index.html"><img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/><span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span></a>
+<nav aria-label="Admin navigation">
+<a class="active" href="admin-dashboard.html">Overview</a>
+<a href="#events">Events</a>
+<a href="#tickets">Tickets</a>
+<a href="#attendees">Attendees</a>
+<a href="#payments">Payments</a>
+<a href="../verify/verify.html">Verify ticket</a>
+<a href="../index.html">View website</a>
+</nav>
+<div class="sidebar-note"><strong>Demo dashboard</strong><p>Figures shown here are sample values until the backend API is connected.</p></div>
+</aside>
+<main class="main">
+<header class="topbar">
+<div><p class="eyebrow">ADMINISTRATION</p><h1>Dashboard overview</h1><p class="subtitle">A quick view of conference registration and ticket activity.</p></div>
+<span class="admin-chip"><span class="status-dot"></span> Admin preview</span>
+</header>
+<section aria-label="Summary statistics" class="metrics">
+<article class="metric"><div class="metric-top"><span>Total registrations</span><span class="metric-icon">◎</span></div><strong id="registrations-count">—</strong><small>Attendee registrations</small></article>
+<article class="metric"><div class="metric-top"><span>Tickets sold</span><span class="metric-icon">▣</span></div><strong id="tickets-count">—</strong><small>Paid tickets</small></article>
+<article class="metric"><div class="metric-top"><span>Payments received</span><span class="metric-icon">₦</span></div><strong id="payments-total">—</strong><small>Confirmed payments</small></article>
+<article class="metric"><div class="metric-top"><span>Checked in</span><span class="metric-icon">✓</span></div><strong id="checked-in-count">—</strong><small>Tickets marked as used</small></article>
+</section>
+<section class="content-grid">
+<article class="panel" id="events">
+<div class="panel-heading"><div><h2>Event management</h2><p>Event details and ticket categories.</p></div><span class="tag">API pending</span></div>
+<div class="event-card">
+<div class="event-symbol">UI</div>
+<div class="event-details"><h3>UI Tech Conference</h3><p>University of Ibadan · Event details should be confirmed by the project team.</p><span class="event-status"><span class="status-dot"></span> Event setup</span></div>
+</div>
+<p class="section-note">Connect this section to backend endpoints to edit event details, dates, capacity, and ticket availability.</p>
+</article>
+<article class="panel" id="tickets">
+<div class="panel-heading"><div><h2>Ticket categories</h2><p>Sample categories for layout preview only.</p></div><span class="tag">Sample data</span></div>
+<div class="ticket-row"><div><strong>Regular</strong><small>General admission</small></div><span class="price">Set by team</span></div>
+<div class="ticket-row"><div><strong>VIP</strong><small>Priority access</small></div><span class="price">Set by team</span></div>
+<div class="ticket-row"><div><strong>Student</strong><small>Student admission, if offered</small></div><span class="price">Set by team</span></div>
+<p class="section-note">Do not treat these categories or prices as final until approved by the event team.</p>
+</article>
+<article class="panel wide" id="attendees">
+<div class="panel-heading"><div><h2>Recent registrations</h2><p>Latest attendee records will appear here after API integration.</p></div><button class="secondary" id="refresh-button" type="button">Refresh preview</button></div>
+<div class="table-wrap"><table><thead><tr><th>Attendee</th><th>Email</th><th>Ticket</th><th>Status</th></tr></thead><tbody id="attendees-body"><tr><td class="empty" colspan="4">No live attendee data connected yet.</td></tr></tbody></table></div>
+</article>
+<article class="panel wide" id="payments">
+<div class="panel-heading"><div><h2>Payment activity</h2><p>Payment status should come from the payment provider and backend.</p></div><span class="tag">Not connected</span></div>
+<div class="payment-placeholder"><span class="payment-symbol">₦</span><div><strong>Payment records will appear here</strong><p>Connect a protected backend endpoint before showing transaction records or totals.</p></div></div>
+</article>
+</section>
+<footer>UI Tech Conference · Admin dashboard preview</footer>
+</main>
+</body>
+</html>
