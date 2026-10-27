@@ -3,24 +3,19 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/response.php';
 require_once __DIR__ . '/../includes/validate.php';
-header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    fail('Method not allowed.',405);
+require_method('POST');
 
-}
+$input = read_json();
 
-$input = json_decode(file_get_contents('php://input'), true);
-
-if (!is_array($input)) {
-    fail('Invalid request data.',400);
-}
-
-$email = trim($input['email'] ?? '');
+$email = valid_email($input['email'] ?? null);
 $password = $input['password'] ?? '';
 
-if ($email === '' || $password === '') {
-   fail('Email and password required',400);
+if (!$email || empty($password)) {
+    fail('Email and password required', 400, [
+        ['field' => 'email', 'message' => 'Valid email is required.'],
+        ['field' => 'password', 'message' => 'Password is required.']
+    ]);
 }
 
 $pdo = db();
@@ -36,9 +31,9 @@ $stmt->execute([$email]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user || !password_verify($password, $user['password_hash'])) {
-   fail('Invalid email or password.',401);
+    fail('Invalid email or password.', 401);
 }
 
 login_user($user);
 
-ok('Login succesful.',['user =>4user']);
+ok('Login successful.', ['user' => current_user()]);

@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let redirecting = false;
     try {
-      const result = await apiRequest("login.php", {
+      const result = await apiRequest("/login.php", {
         method: "POST",
         body: {
           email: emailValue,
@@ -147,18 +147,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getDestination(role) {
+    const next = new URLSearchParams(window.location.search).get("next");
+    if (next) {
+      // Safe relative redirect
+      if (!next.startsWith("http://") && !next.startsWith("https://") && !next.startsWith("//")) {
+        return next;
+      }
+    }
+
     if (["admin", "administrator", "staff_admin"].includes(role)) {
       return "../admin/admin-dashboard.html";
     }
-
-    // Respect an explicit, known in-site destination; never accept an arbitrary URL.
-    const next = new URLSearchParams(window.location.search).get("next");
-    if (next === "checkout") return "../checkout/checkout.html";
-    if (next === "tickets") return "../tickets/tickets.html";
-
-    // If the attendee selected tickets before signing in, continue to checkout.
-    // Otherwise start at the ticket-selection page after a regular sign-in.
-    return hasSavedSelection() ? "../checkout/checkout.html" : "../tickets/tickets.html";
+    if (["verifier", "gate_officer"].includes(role)) {
+      return "../verify/verify.html";
+    }
+    return "../tickets/tickets.html";
   }
 
   function hasSavedSelection() {

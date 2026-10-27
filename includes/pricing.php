@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/response.php';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/response.php';
 
 
 function naira_to_kobo(string $naira): int

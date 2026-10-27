@@ -1,13 +1,14 @@
 <?php
+require_once __DIR__ . '/config.php';
 
-date_default_timezone_set('Africa/Lagos');
+date_default_timezone_set(defined('TIMEZONE') ? TIMEZONE : 'Africa/Lagos');
 function db(){
     static $pdo=null;
 if ($pdo===null){
-$host='127.0.0.1';
-$dbname='uiconf';
-$username='root';
-$password='';
+$host = defined('DB_HOST') ? DB_HOST : '127.0.0.1';
+$dbname = defined('DB_NAME') ? DB_NAME : 'uiconf';
+$username = defined('DB_USER') ? DB_USER : 'root';
+$password = defined('DB_PASS') ? DB_PASS : '';
 
 $dsn="mysql:host=$host;dbname=$dbname;charset=utf8mb4";
 try{

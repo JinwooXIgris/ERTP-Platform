@@ -1,73 +1,61 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
-header('Content-Type: application/json');
-
 require_once __DIR__ . '/../includes/response.php';
-
 require_once __DIR__ . '/../includes/validate.php';
 
+require_method('POST');
 
-if($_SERVER['REQUEST_METHOD']!=='POST'){
-     fail('Method not allowed.',405);
-}
-    $input=json_decode(file_get_contents('php://input'),true);
-    if(!is_array($input)){
-        fail('Invalid request data.',400);
-    }
+$input = read_json();
 
-$fullName = trim($input['full_name'] ?? '');
-$email = trim($input['email'] ?? '');
-$phone = trim($input['phone'] ?? '');
+$fullName = clean_string($input['full_name'] ?? $input['name'] ?? null, 2, 100);
+$email = valid_email($input['email'] ?? null);
+$phone = clean_string($input['phone'] ?? null, 7, 20);
 $password = $input['password'] ?? '';
 $attendeeType = $input['attendee_type'] ?? 'public';
 
+$errors = [];
 
-if (
-    $fullName === '' ||
-    $email === '' ||
-    $phone === '' ||
-    $password === ''
-) {
-    fail('Please fill in all required fields.',400);
+if (!$fullName) {
+    $errors[] = ['field' => 'full_name', 'message' => 'Full name must be between 2 and 100 characters.'];
 }
 
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-     fail('Please enter a valid email address',422);
+if (!$email) {
+    $errors[] = ['field' => 'email', 'message' => 'Please enter a valid email address.'];
 }
 
+if (!$phone) {
+    $errors[] = ['field' => 'phone', 'message' => 'Please enter a valid phone number.'];
+}
+
+if (!is_string($password) || strlen($password) < 8) {
+    $errors[] = ['field' => 'password', 'message' => 'Password must be at least 8 characters.'];
+}
 
 $allowedTypes = ['student', 'staff', 'public', 'vip'];
-
 if (!in_array($attendeeType, $allowedTypes, true)) {
-    fail('Invalid attendee type.',422);
+    $errors[] = ['field' => 'attendee_type', 'message' => 'Invalid attendee type.'];
 }
 
-
-if (strlen($password) < 8) {
-    fail('Password must be at least eight characters.',422);
+if (!empty($errors)) {
+    fail('Please fix the highlighted fields.', 400, $errors);
 }
-
-
 
 $pdo = db();
 
-$stmt = $pdo->prepare(
-    'SELECT id FROM users WHERE email = ?'
-);
-
+$stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
 $stmt->execute([$email]);
 
 if ($stmt->fetch()) {
-   fail('This email is already registered.', 409);
+    fail('This email is already registered.', 409, [
+        ['field' => 'email', 'message' => 'This email is already registered. Please log in or use another email.']
+    ]);
 }
-
 
 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
 $stmt = $pdo->prepare(
-    'INSERT INTO users
-    (full_name, email, phone, password_hash, attendee_type, role)
-    VALUES (?, ?, ?, ?, ?, ?)'
+    'INSERT INTO users (full_name, email, phone, password_hash, attendee_type, role)
+     VALUES (?, ?, ?, ?, ?, ?)'
 );
 
 $stmt->execute([
@@ -79,6 +67,6 @@ $stmt->execute([
     'attendee'
 ]);
 
-ok('Registration succesful.', [],201);
+$userId = (int)$pdo->lastInsertId();
 
-
+ok('Registration successful.', ['user_id' => $userId], 201);

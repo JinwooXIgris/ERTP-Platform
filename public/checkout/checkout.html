@@ -1,63 +1,98 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Checkout | UI Tech Conference</title>
-<link href="checkout.css" rel="stylesheet"/>
-<script defer="" src="checkout.js"></script>
-<link href="../assets/css/global.css" rel="stylesheet"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Checkout | UI Tech Conference</title>
+    <link href="../assets/css/global.css" rel="stylesheet" />
+    <link href="checkout.css" rel="stylesheet" />
+    <script defer="" src="../shared/api.js"></script>
+    <script defer="" src="checkout.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
+
 <body>
-<header class="topbar">
-<a aria-label="UI Tech Conference home" class="brand" href="../index.html"><img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/><span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span></a>
-<nav aria-label="Main navigation">
-<a class="button-link" href="../index.html">Home</a>
-<a href="../tickets/tickets.html">Tickets</a>
-<a href="../my-tickets/my-tickets.html">My Tickets</a>
-</nav>
-</header>
-<main class="page">
-<div class="intro">
-<p class="eyebrow">ORDER SUMMARY</p>
-<h1>Complete your booking</h1>
-<p>Review your ticket details before continuing to payment.</p>
-</div>
-<div class="checkout-layout">
-<section class="panel order-panel">
-<div class="panel-heading"><div><h2>Your order</h2><p>Confirm the selected ticket and quantity.</p></div><span class="secure-label">🔒 Secure checkout</span></div>
-<div class="event-summary">
-<img alt="University of Ibadan logo" class="event-logo" src="../assets/images/ui-logo.png"/>
-<div><h3>UI Tech Conference</h3><p>University of Ibadan</p><small>Event date and venue: to be confirmed by the event team</small></div>
-</div>
-<div class="ticket-line">
-<div><strong id="ticket-name">Selected ticket</strong><p id="ticket-description">Ticket details will be confirmed from your selection.</p></div>
-<span class="price" id="ticket-price">₦—</span>
-</div>
-<div class="quantity-row"><label for="quantity">Quantity</label><div class="quantity-control"><button aria-label="Decrease quantity" id="decrease" type="button">−</button><output for="quantity" id="quantity-value">1</output><button aria-label="Increase quantity" id="increase" type="button">+</button></div></div>
-<div class="total-row"><span>Subtotal</span><strong id="subtotal">₦—</strong></div>
-<div class="total-row"><span>Service fee</span><strong id="service-fee">₦—</strong></div>
-<div class="total-row grand-total"><span>Total due</span><strong id="total">₦—</strong></div>
-<p class="note">Prices and fees are placeholders until the backend returns the approved ticket price and any applicable fees.</p>
-</section>
-<section class="panel payment-panel">
-<div class="panel-heading"><div><h2>Payment method</h2><p>Select how you intend to pay.</p></div></div>
-<form id="checkout-form">
-<fieldset>
-<legend>Choose a payment option</legend>
-<label class="payment-option"><input checked="" name="paymentMethod" type="radio" value="online"/><span class="payment-icon">₦</span><span><strong>Online payment</strong><small>Continue to the payment provider when integrated.</small></span></label>
-<label class="payment-option"><input name="paymentMethod" type="radio" value="bank-transfer"/><span class="payment-icon">↗</span><span><strong>Bank transfer</strong><small>Available only if supported by the payment provider.</small></span></label>
-</fieldset>
-<label class="consent"><input id="terms" required="" type="checkbox"/><span>I have reviewed my order and agree to the event's booking terms.</span></label>
-<button class="pay-button" type="submit">Continue to payment <span aria-hidden="true">→</span></button>
-<p aria-live="polite" class="message" hidden="" id="checkout-message" role="status"></p>
-<p class="security-note">Never enter card details directly into this demo page. Payment details should be handled by the approved payment provider.</p>
-</form>
-</section>
-</div>
-<p class="back-link"><a class="button-link" href="../tickets/tickets.html">← Back to ticket selection</a></p>
-</main>
-<footer>UI Tech Conference · Checkout preview</footer>
+    <header class="topbar">
+        <a aria-label="UI Tech Conference home" class="brand" href="../index.html"><img alt="University of Ibadan crest"
+                class="brand-logo" src="../assets/images/ui-logo.png" /><span class="brand-copy"><strong>UI Tech
+                    Conference</strong><small>University of Ibadan</small></span></a>
+        <nav aria-label="Main navigation">
+            <a class="button-link" href="../index.html">Home</a>
+            <a href="../tickets/tickets.html">Tickets</a>
+            <a href="../my-tickets/my-tickets.html">My Tickets</a>
+        </nav>
+    </header>
+    <main class="page">
+        <div class="intro">
+            <p class="eyebrow">ORDER SUMMARY</p>
+            <h1>Complete your booking</h1>
+            <p>Review your ticket details before continuing to payment.</p>
+        </div>
+        <div class="checkout-layout">
+            <section class="panel order-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Your order</h2>
+                        <p id="order-id-label">Order #—</p>
+                    </div><span class="secure-label">🔒 Secure checkout</span>
+                </div>
+                <div class="event-summary">
+                    <img alt="University of Ibadan logo" class="event-logo" src="../assets/images/ui-logo.png" />
+                    <div>
+                        <h3>UI Tech Conference 2026</h3>
+                        <p id="event-venue-display">University of Ibadan</p><small id="event-date-display">Date and
+                            venue confirmed by conference organizer</small>
+                    </div>
+                </div>
+                <div id="order-lines-container">
+                    <div class="ticket-line">
+                        <div><strong id="ticket-name">Loading order details…</strong>
+                            <p id="ticket-description">Connecting to server to retrieve confirmed prices.</p>
+                        </div>
+                        <span class="price" id="ticket-price">₦—</span>
+                    </div>
+                </div>
+                <div class="total-row" style="margin-top: 15px;"><span>Subtotal</span><strong id="subtotal">₦—</strong>
+                </div>
+                <div class="total-row"><span>Service fee</span><strong id="service-fee">₦0.00</strong></div>
+                <div class="total-row grand-total"><span>Total due</span><strong id="total">₦—</strong></div>
+                <p class="note">Prices are verified server-side directly against the database order records.</p>
+            </section>
+            <section class="panel payment-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Payment method</h2>
+                        <p>Select simulation mode to process payment.</p>
+                    </div>
+                </div>
+                <form id="checkout-form">
+                    <fieldset>
+                        <legend>Payment simulation</legend>
+                        <label class="payment-option"><input checked="" name="simulate_outcome" type="radio"
+                                value="success" /><span class="payment-icon">₦</span><span><strong>Simulated Payment
+                                    (Success)</strong><small>Simulates approved instant bank card / transfer
+                                    payment.</small></span></label>
+                        <label class="payment-option"><input name="simulate_outcome" type="radio" value="fail" /><span
+                                class="payment-icon">✕</span><span><strong>Simulate Payment
+                                    Failure</strong><small>Simulates a declined payment to test retry
+                                    behavior.</small></span></label>
+                    </fieldset>
+                    <label class="consent"><input checked="" id="terms" required="" type="checkbox" /><span>I have
+                            reviewed my order and agree to the event's booking terms.</span></label>
+                    <button class="pay-button" id="pay-submit-btn" type="submit">Pay now <span
+                            aria-hidden="true">→</span></button>
+                    <p aria-live="polite" class="message" hidden="" id="checkout-message" role="status"
+                        style="margin-top: 15px; padding: 12px; border-radius: 6px;"></p>
+                    <p class="security-note">Transactions are safely recorded in the University of Ibadan conference
+                        payment registry.</p>
+                </form>
+            </section>
+        </div>
+        <p class="back-link"><a class="button-link" href="../tickets/tickets.html">← Back to ticket selection</a></p>
+    </main>
+    <footer>UI Tech Conference · Checkout preview</footer>
 </body>
+
 </html>

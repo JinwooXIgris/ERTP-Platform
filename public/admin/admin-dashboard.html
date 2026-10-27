@@ -6,60 +6,261 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Admin Dashboard | UI Tech Conference</title>
 <link href="admin-dashboard.css" rel="stylesheet"/>
-<script defer="" src="admin-dashboard.js"></script>
 <link href="../assets/css/global.css" rel="stylesheet"/>
+<script defer="" src="../shared/api.js"></script>
+<script defer="" src="admin-dashboard.js"></script>
 </head>
 <body>
 <aside class="sidebar">
-<a aria-label="UI Tech Conference home" class="brand" href="../index.html"><img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/><span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span></a>
+<a aria-label="UI Tech Conference home" class="brand" href="../index.html">
+<img alt="University of Ibadan crest" class="brand-logo" src="../assets/images/ui-logo.png"/>
+<span class="brand-copy"><strong>UI Tech Conference</strong><small>University of Ibadan</small></span>
+</a>
 <nav aria-label="Admin navigation">
-<a class="active" href="admin-dashboard.html">Overview</a>
+<a class="active" href="#overview">Overview</a>
 <a href="#events">Events</a>
-<a href="#tickets">Tickets</a>
+<a href="#tickets">Tickets &amp; Pricing</a>
 <a href="#attendees">Attendees</a>
-<a href="#payments">Payments</a>
-<a href="../verify/verify.html">Verify ticket</a>
+<a href="#payments">Orders &amp; Payments</a>
+<a href="#users">Registered Users</a>
+<a href="../verify/verify.html">Gate Verify</a>
 <a href="../index.html">View website</a>
+<a href="#" id="admin-logout-btn">Log out</a>
 </nav>
-<div class="sidebar-note"><strong>Demo dashboard</strong><p>Figures shown here are sample values until the backend API is connected.</p></div>
+<div class="sidebar-note">
+<strong>Admin Portal</strong>
+<p id="admin-user-info">Logged in as Administrator</p>
+</div>
 </aside>
 <main class="main">
 <header class="topbar">
-<div><p class="eyebrow">ADMINISTRATION</p><h1>Dashboard overview</h1><p class="subtitle">A quick view of conference registration and ticket activity.</p></div>
-<span class="admin-chip"><span class="status-dot"></span> Admin preview</span>
-</header>
-<section aria-label="Summary statistics" class="metrics">
-<article class="metric"><div class="metric-top"><span>Total registrations</span><span class="metric-icon">◎</span></div><strong id="registrations-count">—</strong><small>Attendee registrations</small></article>
-<article class="metric"><div class="metric-top"><span>Tickets sold</span><span class="metric-icon">▣</span></div><strong id="tickets-count">—</strong><small>Paid tickets</small></article>
-<article class="metric"><div class="metric-top"><span>Payments received</span><span class="metric-icon">₦</span></div><strong id="payments-total">—</strong><small>Confirmed payments</small></article>
-<article class="metric"><div class="metric-top"><span>Checked in</span><span class="metric-icon">✓</span></div><strong id="checked-in-count">—</strong><small>Tickets marked as used</small></article>
-</section>
-<section class="content-grid">
-<article class="panel" id="events">
-<div class="panel-heading"><div><h2>Event management</h2><p>Event details and ticket categories.</p></div><span class="tag">API pending</span></div>
-<div class="event-card">
-<div class="event-symbol">UI</div>
-<div class="event-details"><h3>UI Tech Conference</h3><p>University of Ibadan · Event details should be confirmed by the project team.</p><span class="event-status"><span class="status-dot"></span> Event setup</span></div>
+<div>
+<p class="eyebrow">ADMINISTRATION</p>
+<h1>Dashboard overview</h1>
+<p class="subtitle">Real-time conference registration, ticketing, and revenue metrics.</p>
 </div>
-<p class="section-note">Connect this section to backend endpoints to edit event details, dates, capacity, and ticket availability.</p>
+<div style="display:flex; align-items:center; gap:12px;">
+<button class="secondary" id="refresh-button" type="button">↻ Refresh Data</button>
+<span class="admin-chip"><span class="status-dot"></span> Live Admin</span>
+</div>
+</header>
+
+<div aria-live="polite" class="form-alert" hidden="" id="admin-alert" style="margin-bottom: 20px; padding: 12px 16px; border-radius: 8px;"></div>
+
+<section aria-label="Summary statistics" class="metrics" id="overview">
+<article class="metric">
+<div class="metric-top"><span>Paid Orders</span><span class="metric-icon">◎</span></div>
+<strong id="registrations-count">—</strong>
+<small>Confirmed paid orders</small>
 </article>
-<article class="panel" id="tickets">
-<div class="panel-heading"><div><h2>Ticket categories</h2><p>Sample categories for layout preview only.</p></div><span class="tag">Sample data</span></div>
-<div class="ticket-row"><div><strong>Regular</strong><small>General admission</small></div><span class="price">Set by team</span></div>
-<div class="ticket-row"><div><strong>VIP</strong><small>Priority access</small></div><span class="price">Set by team</span></div>
-<div class="ticket-row"><div><strong>Student</strong><small>Student admission, if offered</small></div><span class="price">Set by team</span></div>
-<p class="section-note">Do not treat these categories or prices as final until approved by the event team.</p>
+<article class="metric">
+<div class="metric-top"><span>Tickets Sold</span><span class="metric-icon">▣</span></div>
+<strong id="tickets-count">—</strong>
+<small>Issued conference passes</small>
 </article>
-<article class="panel wide" id="attendees">
-<div class="panel-heading"><div><h2>Recent registrations</h2><p>Latest attendee records will appear here after API integration.</p></div><button class="secondary" id="refresh-button" type="button">Refresh preview</button></div>
-<div class="table-wrap"><table><thead><tr><th>Attendee</th><th>Email</th><th>Ticket</th><th>Status</th></tr></thead><tbody id="attendees-body"><tr><td class="empty" colspan="4">No live attendee data connected yet.</td></tr></tbody></table></div>
+<article class="metric">
+<div class="metric-top"><span>Revenue Generated</span><span class="metric-icon">₦</span></div>
+<strong id="payments-total">—</strong>
+<small>Total confirmed payments</small>
 </article>
-<article class="panel wide" id="payments">
-<div class="panel-heading"><div><h2>Payment activity</h2><p>Payment status should come from the payment provider and backend.</p></div><span class="tag">Not connected</span></div>
-<div class="payment-placeholder"><span class="payment-symbol">₦</span><div><strong>Payment records will appear here</strong><p>Connect a protected backend endpoint before showing transaction records or totals.</p></div></div>
+<article class="metric">
+<div class="metric-top"><span>Gate Admitted</span><span class="metric-icon">✓</span></div>
+<strong id="checked-in-count">—</strong>
+<small>Tickets marked used</small>
 </article>
 </section>
-<footer>UI Tech Conference · Admin dashboard preview</footer>
+
+<section class="content-grid">
+<!-- Event Management -->
+<article class="panel" id="events">
+<div class="panel-heading">
+<div>
+<h2>Event Management</h2>
+<p>Official conference settings and schedule.</p>
+</div>
+<button class="secondary" id="toggle-event-edit" type="button">Edit Event</button>
+</div>
+<div class="event-card" id="event-display-card">
+<div class="event-symbol">UI</div>
+<div class="event-details" style="flex:1;">
+<h3 id="event-title-display">University of Ibadan Technology Conference 2026</h3>
+<p id="event-desc-display">Connecting students, researchers, and tech leaders.</p>
+<div style="margin-top: 8px; font-size: 12px; color: #475569;">
+<p style="margin:2px 0;"><strong>Venue:</strong> <span id="event-venue-display">Kunle Torimiro Centre</span></p>
+<p style="margin:2px 0;"><strong>Date:</strong> <span id="event-date-display">—</span></p>
+</div>
+<span class="event-status"><span class="status-dot"></span> Live in Database</span>
+</div>
+</div>
+
+<!-- Hidden Edit Form -->
+<form id="event-edit-form" style="display:none; margin-top:15px; background:#f8fafc; padding:15px; border-radius:10px; border:1px solid #e2e8f0;">
+<div style="margin-bottom:10px;">
+<label style="font-size:12px; font-weight:700;">Conference Title</label>
+<input id="edit-event-title" required="" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px;" type="text"/>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+<div>
+<label style="font-size:12px; font-weight:700;">Event Date (YYYY-MM-DD HH:MM:SS)</label>
+<input id="edit-event-date" required="" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px;" type="text"/>
+</div>
+<div>
+<label style="font-size:12px; font-weight:700;">Venue</label>
+<input id="edit-event-venue" required="" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px;" type="text"/>
+</div>
+</div>
+<div style="margin-bottom:10px;">
+<label style="font-size:12px; font-weight:700;">Description</label>
+<textarea id="edit-event-desc" required="" rows="2" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit;"></textarea>
+</div>
+<div style="margin-bottom:10px;">
+<label style="font-size:12px; font-weight:700;">Schedule (Pipe-separated |)</label>
+<textarea id="edit-event-schedule" required="" rows="2" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit;"></textarea>
+</div>
+<div style="margin-bottom:10px;">
+<label style="font-size:12px; font-weight:700;">Speakers (Pipe-separated |)</label>
+<textarea id="edit-event-speakers" required="" rows="2" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit;"></textarea>
+</div>
+<div style="display:flex; gap:10px;">
+<button id="save-event-btn" style="background:#1d4ed8; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;" type="submit">Save Event Details</button>
+<button id="cancel-event-btn" class="secondary" type="button">Cancel</button>
+</div>
+</form>
+</article>
+
+<!-- Ticket Categories & Price Management -->
+<article class="panel" id="tickets">
+<div class="panel-heading">
+<div>
+<h2>Ticket Categories &amp; Pricing</h2>
+<p>Live category quota and real-time price management.</p>
+</div>
+<span class="tag">Instant Update</span>
+</div>
+<div id="categories-list">
+<p class="section-note">Loading categories…</p>
+</div>
+</article>
+
+<!-- Attendees List -->
+<article class="panel wide" id="attendees">
+<div class="panel-heading">
+<div>
+<h2>Attendee Directory</h2>
+<p>Searchable list of issued tickets and admitted guests.</p>
+</div>
+<div style="display:flex; gap:8px;">
+<input id="attendees-search" placeholder="Search name, email, ticket #…" style="padding:7px 12px; font-size:12px; border:1px solid #cbd5e1; border-radius:6px; min-width:220px;" type="text"/>
+<button class="secondary" id="search-attendees-btn" type="button">Search</button>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Ticket #</th>
+<th>Holder</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Category</th>
+<th>Status</th>
+<th>Issued At</th>
+</tr>
+</thead>
+<tbody id="attendees-body">
+<tr><td class="empty" colspan="7">Loading attendees…</td></tr>
+</tbody>
+</table>
+</div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:12px;">
+<span id="attendees-page-info">Showing page 1</span>
+<div style="display:flex; gap:6px;">
+<button class="secondary" id="attendees-prev-btn" type="button">Previous</button>
+<button class="secondary" id="attendees-next-btn" type="button">Next</button>
+</div>
+</div>
+</article>
+
+<!-- Orders & Payments -->
+<article class="panel wide" id="payments">
+<div class="panel-heading">
+<div>
+<h2>Orders &amp; Payment Attempts</h2>
+<p>Complete audit of order purchases and payment attempts.</p>
+</div>
+<div style="display:flex; gap:8px;">
+<input id="orders-search" placeholder="Search order id, user, email…" style="padding:7px 12px; font-size:12px; border:1px solid #cbd5e1; border-radius:6px; min-width:220px;" type="text"/>
+<button class="secondary" id="search-orders-btn" type="button">Search</button>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Order #</th>
+<th>Customer</th>
+<th>Email</th>
+<th>Total Due</th>
+<th>Status</th>
+<th>Payment Reference(s)</th>
+<th>Order Date</th>
+</tr>
+</thead>
+<tbody id="orders-body">
+<tr><td class="empty" colspan="7">Loading orders…</td></tr>
+</tbody>
+</table>
+</div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:12px;">
+<span id="orders-page-info">Showing page 1</span>
+<div style="display:flex; gap:6px;">
+<button class="secondary" id="orders-prev-btn" type="button">Previous</button>
+<button class="secondary" id="orders-next-btn" type="button">Next</button>
+</div>
+</div>
+</article>
+
+<!-- Registered Users -->
+<article class="panel wide" id="users">
+<div class="panel-heading">
+<div>
+<h2>Registered User Accounts</h2>
+<p>All accounts created on the platform.</p>
+</div>
+<div style="display:flex; gap:8px;">
+<input id="users-search" placeholder="Search user name, email, phone…" style="padding:7px 12px; font-size:12px; border:1px solid #cbd5e1; border-radius:6px; min-width:220px;" type="text"/>
+<button class="secondary" id="search-users-btn" type="button">Search</button>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Full Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Attendee Type</th>
+<th>Role</th>
+<th>Registered At</th>
+</tr>
+</thead>
+<tbody id="users-body">
+<tr><td class="empty" colspan="7">Loading users…</td></tr>
+</tbody>
+</table>
+</div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:12px;">
+<span id="users-page-info">Showing page 1</span>
+<div style="display:flex; gap:6px;">
+<button class="secondary" id="users-prev-btn" type="button">Previous</button>
+<button class="secondary" id="users-next-btn" type="button">Next</button>
+</div>
+</div>
+</article>
+</section>
+
+<footer>University of Ibadan · Event Registration &amp; Ticket Payment Platform (ERTP) Admin</footer>
 </main>
 </body>
 </html>

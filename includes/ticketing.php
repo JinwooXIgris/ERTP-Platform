@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/config.php';
 
 // Never begins or commits a transaction. payment.php does that.
 class TicketIssuer {

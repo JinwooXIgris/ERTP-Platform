@@ -1,11 +1,9 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/response.php';
 
-if(session_status()===PHP_SESSION_NONE){
-    session_start();
-
-// Configure session cookies for security
-    $params = session_get_cookie_params();
+if (session_status() === PHP_SESSION_NONE) {
+    // Configure session cookies for security before session_start
     session_set_cookie_params([
         'lifetime' => 86400,        // 24 hours
         'path' => '/',
@@ -14,28 +12,28 @@ if(session_status()===PHP_SESSION_NONE){
         'httponly' => true,         // Prevent JavaScript access (XSS protection)
         'samesite' => 'Lax',        // CSRF protection
     ]);
+    session_start();
 }
 
-function current_user(){
-    return $_SESSION['user']??null;
-
+function current_user(): ?array {
+    return $_SESSION['user'] ?? null;
 }
 
-function require_login(){
-    if (current_user()===null){
-        http_response_code(401);
-        exit('Authentication required.');
+function require_login(): array {
+    $user = current_user();
+    if ($user === null) {
+        fail('Authentication required.', 401);
     }
+    return $user;
 }
 
-function require_role(...$roles){
-    require_login();
-    $user=current_user();
+function require_role(...$roles): array {
+    $user = require_login();
 
-    if(!in_array($user['role'] ?? null,$roles,true)){
-        http_response_code(403);
-        exit('You do not have permission to this resource.');
+    if (!in_array($user['role'] ?? null, $roles, true)) {
+        fail('You do not have permission to access this resource.', 403);
     }
+    return $user;
 }
 
 function login_user($userRow){

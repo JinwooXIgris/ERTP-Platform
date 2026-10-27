@@ -116,6 +116,7 @@
       const result = await apiRequest('register.php', {
         method: 'POST',
         body: {
+          full_name: fields.name.value.trim(),
           name: fields.name.value.trim(),
           email: fields.email.value.trim(),
           phone: fields.phone.value.trim(),

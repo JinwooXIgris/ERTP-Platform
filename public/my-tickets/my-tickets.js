@@ -1,48 +1,133 @@
 (() => {
+  'use strict';
+
   const list = document.getElementById('ticket-list');
   const empty = document.getElementById('empty-state');
   const notice = document.getElementById('notice');
-  // Demo-compatible keys. A real implementation should fetch tickets from the authenticated PHP API.
-  const keys = ['uiTechTickets', 'uiTechTicket', 'uiTechOrder', 'ticketOrder', 'checkoutOrder', 'orderDraft'];
-  const safeRead = key => { try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; } catch { return null; } };
-  const first = (...values) => values.find(v => v !== undefined && v !== null && String(v).trim() !== '');
-  function normalize(data, key) {
-    if (!data) return [];
-    if (Array.isArray(data)) return data.flatMap((v, i) => normalize(v, key + i));
-    if (typeof data !== 'object') return [];
-    if (Array.isArray(data.tickets)) return data.tickets.map((t, i) => ({...t, _key:key + i}));
-    const looksLikeTicket = ['ticketType','ticketName','category','ticketCategory','reference','referenceNumber','ticketReference','orderReference'].some(k => data[k] != null);
-    return looksLikeTicket ? [{...data, _key:key}] : [];
+
+  function formatDate(dateStr) {
+    if (!dateStr) return "To be announced";
+    try {
+      const d = new Date(dateStr.replace(" ", "T"));
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString("en-NG", {
+        weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+      });
+    } catch {
+      return dateStr;
+    }
   }
-  let tickets = [];
-  keys.forEach(key => { tickets.push(...normalize(safeRead(key), key)); });
-  const seen = new Set();
-  tickets = tickets.filter(t => { const id = first(t.ticketReference,t.referenceNumber,t.reference,t.orderReference,t.id,t._key); if (seen.has(String(id))) return false; seen.add(String(id)); return true; });
-  function statusInfo(ticket) {
-    const raw = String(first(ticket.paymentStatus,ticket.status,'Pending')).toLowerCase();
-    if (raw.includes('success') || raw.includes('paid') || raw.includes('confirm')) return ['Confirmed','confirmed'];
-    if (raw.includes('fail') || raw.includes('cancel')) return ['Failed','failed'];
-    return ['Pending','pending'];
-  }
-  function makeCard(t, i) {
-    const name = first(t.ticketType,t.ticketName,t.category,t.ticketCategory,t.name,'Conference Pass');
-    const qty = Number(first(t.quantity,t.ticketQuantity,1)) || 1;
-    const amount = Number(first(t.totalAmount,t.total,t.amount,Number(first(t.price,0))*qty)) || 0;
-    const ref = first(t.ticketReference,t.referenceNumber,t.reference,t.orderReference,t.id,'DEMO-' + String(i+1).padStart(4,'0'));
-    const attendee = first(t.fullName,t.attendeeName,t.nameOfAttendee,t.name,'Attendee details unavailable');
-    const email = first(t.email,t.attendeeEmail,'—');
-    const [status,statusClass] = statusInfo(t);
-    const article = document.createElement('article'); article.className='ticket-card';
-    article.innerHTML = `<div class="ticket-main"><div class="ticket-mark" aria-hidden="true">▤</div><div class="ticket-info"><div class="ticket-top"><h3></h3><span class="status ${statusClass}">${status}</span></div><p>University of Ibadan Technology Conference</p><div class="meta-grid"><div><span>ATTENDEE</span><strong class="attendee"></strong></div><div><span>QUANTITY</span><strong>${qty}</strong></div><div><span>ORDER REFERENCE</span><strong class="reference"></strong></div><div><span>AMOUNT</span><strong>${amount ? '₦' + amount.toLocaleString('en-NG') : 'Not available'}</strong></div></div></div></div><div class="ticket-actions"><a class="button open-ticket" href="../ticket-view/ticket-view.html">View ticket</a><button class="button button-outline print-ticket" type="button">Print list</button><button class="text-button copy-ref" type="button">Copy reference</button></div>`;
-    article.querySelector('h3').textContent = name; article.querySelector('.attendee').textContent = attendee; article.querySelector('.reference').textContent = ref;
-    article.querySelector('.open-ticket').addEventListener('click', () => {
-      try { localStorage.setItem('uiTechSelectedTicket', JSON.stringify({...t, ticketReference:ref, ticketType:name, fullName:attendee, email, quantity:qty, totalAmount:amount, paymentStatus:status})); } catch {}
+
+  function makeCard(t) {
+    const isUsed = t.status === 'used';
+    const statusLabel = isUsed ? 'Used at Gate' : 'Valid / Issued';
+    const statusClass = isUsed ? 'failed' : 'confirmed';
+
+    const article = document.createElement('article');
+    article.className = 'ticket-card';
+    article.innerHTML = `
+      <div class="ticket-main">
+        <div class="ticket-mark" aria-hidden="true">${isUsed ? '✓' : '▤'}</div>
+        <div class="ticket-info">
+          <div class="ticket-top">
+            <h3>${t.category} Pass</h3>
+            <span class="status ${statusClass}">${statusLabel}</span>
+          </div>
+          <p>${t.event_title || 'University of Ibadan Technology Conference 2026'}</p>
+          <div class="meta-grid">
+            <div>
+              <span>ATTENDEE</span>
+              <strong>${t.holder_name || 'Attendee'}</strong>
+            </div>
+            <div>
+              <span>TICKET NUMBER</span>
+              <strong style="font-family: monospace;">${t.ticket_number}</strong>
+            </div>
+            <div>
+              <span>EVENT DATE</span>
+              <strong>${formatDate(t.event_date)}</strong>
+            </div>
+            <div>
+              <span>ORDER ID</span>
+              <strong>#${t.order_id}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ticket-actions">
+        <a class="button open-ticket" href="../ticket-view/ticket-view.html?order_id=${t.order_id}">View / Print Ticket</a>
+        <button class="button button-outline print-single" type="button">Print</button>
+        <button class="text-button copy-ref" type="button">Copy ticket #</button>
+      </div>
+    `;
+
+    article.querySelector('.print-single').addEventListener('click', () => {
+      window.location.href = `../ticket-view/ticket-view.html?order_id=${t.order_id}`;
     });
-    article.querySelector('.print-ticket').addEventListener('click', () => window.print());
-    article.querySelector('.copy-ref').addEventListener('click', async e => { try { await navigator.clipboard.writeText(String(ref)); e.currentTarget.textContent='Copied!'; } catch { notice.hidden=false; notice.textContent='Your reference is: ' + ref; } });
+
+    article.querySelector('.copy-ref').addEventListener('click', async (e) => {
+      try {
+        await navigator.clipboard.writeText(String(t.ticket_number));
+        e.currentTarget.textContent = 'Copied!';
+        setTimeout(() => { e.currentTarget.textContent = 'Copy ticket #'; }, 2000);
+      } catch {
+        if (notice) {
+          notice.hidden = false;
+          notice.textContent = `Ticket number: ${t.ticket_number}`;
+        }
+      }
+    });
+
     return article;
   }
-  if (tickets.length) { tickets.forEach((t,i) => list.appendChild(makeCard(t,i))); empty.hidden=true; }
-  else { empty.hidden=false; }
-  if (tickets.length) { notice.hidden=false; notice.textContent='These tickets are read from browser demo data. Only the server can confirm a real ticket or payment.'; }
+
+  async function loadMyTickets() {
+    try {
+      const res = await (window.apiGet ? window.apiGet('/my-tickets.php') : fetch('/api/my-tickets.php').then(r => r.json()));
+
+      if (res.status === 401 || (res.errors && res.errors.some(e => e.message?.includes('Authentication')))) {
+        if (notice) {
+          notice.hidden = false;
+          notice.textContent = 'Please sign in to view your tickets. Redirecting to sign in…';
+        }
+        setTimeout(() => {
+          window.location.href = '../login/login.html?next=../my-tickets/my-tickets.html';
+        }, 1200);
+        return;
+      }
+
+      if (!res.ok && res.success !== true) {
+        if (notice) {
+          notice.hidden = false;
+          notice.textContent = res.message || 'Unable to retrieve your tickets. Please try again.';
+        }
+        return;
+      }
+
+      const tickets = res.data?.tickets || [];
+      if (list) list.innerHTML = '';
+
+      if (tickets.length > 0) {
+        tickets.forEach(t => {
+          list.appendChild(makeCard(t));
+        });
+        if (empty) empty.hidden = true;
+        if (notice) {
+          notice.hidden = false;
+          notice.className = 'notice';
+          notice.textContent = `You have ${tickets.length} confirmed conference ticket${tickets.length === 1 ? '' : 's'}. Click "View / Print Ticket" to display your digital QR code.`;
+        }
+      } else {
+        if (empty) empty.hidden = false;
+        if (notice) notice.hidden = true;
+      }
+    } catch (err) {
+      if (notice) {
+        notice.hidden = false;
+        notice.textContent = 'Network error loading tickets. Please check your connection and refresh.';
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadMyTickets);
 })();
