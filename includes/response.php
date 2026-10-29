@@ -1,38 +1,75 @@
 <?php
 
-/**
- * =============================================================================
- * Response Helper — Standard JSON Envelope for All Endpoints
- * 
- * Purpose:
- *   Every endpoint (auth, event, payment, ticket, verify, admin) returns
- *   the same JSON structure. This file provides three functions to do that:
- *   - ok()          : Success response (with data)
- *   - fail()        : Failure response (with errors)
- *   - json_response(): Generic response (used by ok() and fail())
- *   - read_json()   : Parse php://input as JSON
- * 
- * Usage (in any endpoint):
- *   ok('Users created', ['user_id' => 12], 201);
- *   fail('Invalid email', 400, [['field' => 'email', 'message' => 'Enter a valid email']]);
- * 
- * =============================================================================
- */
+final class Response {
+    public static function json(
+        bool $success,
+        string $message,
+        array $data = [],
+        array $errors = [],
+        int $status = 200
+    ): never {
+        http_response_code($status);
+        header('Content-Type: application/json; charset=utf-8');
 
-// =============================================================================
-// FUNCTION: json_response()
-// 
-// Purpose: Core function that outputs the JSON envelope and exits
-// 
-// Parameters:
-//   $success (bool)     : true for success, false for failure
-//   $message (string)   : Human-readable message ("User created", "Invalid email", etc.)
-//   $data (array)       : Object/array with response data (empty [] on error)
-//   $errors (array)     : Array of field-level errors (only on validation failure)
-//   $status (int)       : HTTP status code (200, 201, 400, 401, 403, 404, 409, 500)
-// 
-// Returns: Never returns; exits after sending JSON and setting status
-//
+        $payload = [
+            'success' => $success,
+            'message' => $message,
+            'data'    => $data,
+            'errors'  => $errors,
+        ];
+
+        echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
+    public static function ok(
+        string $message,
+        array $data = [],
+        int $status = 200
+    ): never {
+        self::json(true, $message, $data, [], $status);
+    }
+
+    public static function fail(
+        string $message,
+        int $status,
+        array $errors = [],
+        array $data = []
+    ): never {
+        self::json(false, $message, $data, $errors, $status);
+    }
+
+    public static function readJson(): array {
+        $input = file_get_contents('php://input');
+        if ($input === false || $input === '') {
+            return [];
+        }
+
+        $data = json_decode($input, true);
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            self::fail('Invalid JSON in request body', 400);
+        }
+
+        return is_array($data) ? $data : [];
+    }
+
+    public static function logError(Throwable|string $error): void {
+        $message = is_string($error) ? $error : ($error->getMessage() . "\n" . $error->getTraceAsString());
+        if (defined('LOG_DIR') && is_dir(LOG_DIR) && is_writable(LOG_DIR)) {
+            $logFile = rtrim(LOG_DIR, '/\\') . '/app.log';
+            $entry = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
+            @file_put_contents($logFile, $entry, FILE_APPEND);
+        } else {
+            error_log($message);
+        }
+    }
+}
+
+set_exception_handler(function (Throwable $e): never {
+    Response::logError($e);
+    Response::fail('Something went wrong', 500);
+});
+
 function json_response(
     bool $success,
     string $message,
@@ -40,124 +77,27 @@ function json_response(
     array $errors = [],
     int $status = 200
 ): never {
-    
-    // Set HTTP status code
-    http_response_code($status);
-    
-    // Set Content-Type header
-    header('Content-Type: application/json; charset=utf-8');
-    
-    // Build the response envelope
-    $response = [
-        'success' => $success,
-        'message' => $message,
-        'data'    => $data,
-        'errors'  => $errors,
-    ];
-    
-    // Output JSON and exit
-    echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+    Response::json($success, $message, $data, $errors, $status);
 }
 
-// =============================================================================
-// FUNCTION: ok()
-// 
-// Purpose: Send a success response with data
-// 
-// Parameters:
-//   $message (string) : Success message ("User created", "Ticket issued", etc.)
-//   $data (array)     : Response data (order, ticket, user, etc.)
-//   $status (int)     : HTTP status (200 default, 201 for creation, 202 for async)
-// 
-// Returns: Never returns; exits after sending JSON
- 
-// When to use:
-//   - Login successful
-//   - User created
-//   - Order created
-//   - Payment confirmed
-//   - Ticket issued
-//   - Verification succeeded
-//
 function ok(
     string $message,
     array $data = [],
     int $status = 200
 ): never {
-    json_response(true, $message, $data, [], $status);
+    Response::ok($message, $data, $status);
 }
 
-// =============================================================================
-// FUNCTION: fail()
-// 
-// Purpose: Send a failure response with optional field-level errors
-// 
-// Parameters:
-//   $message (string) : Failure reason ("Invalid email", "Sold out", "Unauthorized", etc.)
-//   $status (int)     : HTTP status (400, 401, 403, 404, 409, 500, etc.)
-//   $errors (array)   : Field-level errors (for validation failures)
-//                       Format: [['field' => 'email', 'message' => 'Invalid format'], ...]
-//   $data (array)     : Optional extra data (e.g., for 402 payment failed, include payment receipt)
-// 
-// Returns: Never returns; exits after sending JSON
-// 
-// When to use:
-//   - Validation failure (400) — field errors included
-//   - Not logged in (401)
-//   - Wrong role (403)
-//   - Resource not found (404)
-//   - Duplicate/conflict (409)
-//   - Server error (500)
-//
 function fail(
     string $message,
     int $status,
     array $errors = [],
     array $data = []
 ): never {
-    json_response(false, $message, $data, $errors, $status);
+    Response::fail($message, $status, $errors, $data);
 }
 
-// =============================================================================
-// FUNCTION: read_json()
-// 
-// Purpose: Parse the request body as JSON and return as associative array
-// 
-// Returns: Associative array of the parsed JSON
-// 
-// Throws: Exits with 400 if JSON is malformed
-
-// Design Notes:
-//   - Reads php://input (raw POST body)
-//   - Decodes as associative array (not object)
-//   - Returns empty array if body is empty (not an error)
-//   - Returns 400 if JSON is invalid
-//   - Prevents empty string from being treated as empty JSON
-//
 function read_json(): array {
-    
-    // Read the raw request body
-    $input = file_get_contents('php://input');
-    
-    // If empty, return empty array (not an error)
-    if (empty($input)) {
-        return [];
-    }
-    
-    // Decode JSON into associative array
-    $data = json_decode($input, associative: true);
-    
-    // Check for JSON decode errors
-    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
-        fail(
-            'Invalid JSON in request body',
-            400
-        );
-    }
-    
-    // Return the decoded data
-    return $data ?? [];
+    return Response::readJson();
 }
 
-?>
