@@ -8,7 +8,7 @@ Open `index.html` with a local static server (recommended: VS Code Live Server).
 - `register/`, `login/`: account forms
 - `tickets/`: ticket category selection
 - `checkout/`: order review frontend preview
-- `payment-result/`: payment state UI (URL status is for visual testing only)
+- `payment-result/`: payment state UI
 - `my-tickets/`, `ticket-view/`: attendee ticket pages
 - `verify/`: staff ticket lookup UI
 - `admin/`: administration dashboard UI
@@ -25,5 +25,3 @@ Images are centralized in `assets/images/`; shared CSS is in `assets/css/` and `
 5. Initialize and verify payments server-side with the provider; only issue tickets after verified payment.
 6. Generate unique ticket references and QR payloads server-side. Validate tickets at check-in server-side.
 7. Replace frontend preview/localStorage data with API responses.
-
-This ZIP completes the frontend structure and navigation. It does **not** include a functioning PHP backend or live payment integration.
